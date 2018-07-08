@@ -1,1 +1,1 @@
-# E-voting_ptrotocol_based_on_blockchain_and_Visual_cryptography
+# E-voting protocol based on Blockchain and Visual Cryptography

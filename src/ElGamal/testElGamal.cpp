@@ -1,9 +1,8 @@
 #include <iostream>
-#include "crypto++/elgamal.h"
-#include "crypto++/dh2.h"
-#include <crypto++/osrng.h>
-#include <crypto++/integer.h>
-#include <crypto++/nbtheory.h>
+#include "cryptopp/dh2.h"
+#include <cryptopp/osrng.h>
+#include <cryptopp/integer.h>
+#include <cryptopp/nbtheory.h>
 #include "ElGamalAPI.h"
 
 using namespace std;
@@ -46,6 +45,28 @@ int main(){
 	cout<<"PT->"<<res<<endl;
 
 	assert(p.Compare(res) == 0);
+
+	ElGamalAPI api1(800);
+
+	api1.savePrivateKey("test_private");
+	api1.savePublicKey("test_public");
+
+	ElGamalAPI api2;
+	ElGamalAPI api3;
+	Integer rr = p;
+	Integer rr2;
+	Integer rr3;
+	cout<<endl<<"PT->"<<rr<<endl;
+	api2.loadPublicKey("test_public");
+	api2.loadPrivateKey("test_private");
+	size_t sr;
+	api2.encrypt(rr, rr2, sr);
+	api3.loadPrivateKey("test_private");
+	api3.decrypt(rr2, rr3, sr);
+	cout<<endl<<"PT->"<<rr3<<endl;
+
+	assert(rr.Compare(rr3) == 0);
+
 
 	cout<<"Test Completado con exito"<<endl;
 

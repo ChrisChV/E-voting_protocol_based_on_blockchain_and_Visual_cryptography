@@ -2,8 +2,9 @@
 #define UTILS_H
 
 #include <iostream>
-#include <crypto++/integer.h>
-#include <crypto++/secblock.h>
+#include <cassert>
+#include <cryptopp/integer.h>
+#include <cryptopp/secblock.h>
 
 using namespace std;
 using namespace CryptoPP;

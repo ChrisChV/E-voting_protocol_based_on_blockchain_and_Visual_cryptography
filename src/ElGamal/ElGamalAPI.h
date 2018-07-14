@@ -2,10 +2,10 @@
 #define ELGAMALAPI_H
 
 #include <iostream>
-#include <crypto++/osrng.h>
-#include <crypto++/integer.h>
-#include <crypto++/elgamal.h>
-#include <crypto++/files.h>
+#include <cryptopp/osrng.h>
+#include <cryptopp/integer.h>
+#include <cryptopp/elgamal.h>
+#include <cryptopp/files.h>
 #include "../Utils/Utils.h"
 
 using namespace std;
@@ -33,7 +33,6 @@ class ElGamalAPI{
 
 ElGamalAPI::ElGamalAPI(int bitsOfKey){
 	generateKeys(bitsOfKey);
-	cout<<encryptor.FixedMaxPlaintextLength()<<endl;
 }
 
 void ElGamalAPI::generateKeys(int bitsOfKey){
@@ -50,6 +49,7 @@ void ElGamalAPI::savePrivateKey(string fileName){
 
 void ElGamalAPI::loadPrivateKey(string fileName){
 	privateKey.Load(CryptoPP::FileSource(fileName.c_str(), true).Ref());
+	decryptor.AccessKey() = privateKey;
 }
 
 void ElGamalAPI::savePublicKey(string fileName){
@@ -58,6 +58,7 @@ void ElGamalAPI::savePublicKey(string fileName){
 
 void ElGamalAPI::loadPublicKey(string fileName){
 	publicKey.Load(CryptoPP::FileSource(fileName.c_str(), true).Ref());
+	encryptor.AccessKey() = publicKey;
 }
 
 void ElGamalAPI::encrypt(Integer & plainText, Integer & cypherText, size_t & plainTextSize){

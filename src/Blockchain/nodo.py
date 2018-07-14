@@ -174,8 +174,32 @@ class NodoSufAndComis(Nodo):
 		print("Nuevo lider escogido: " + newLeader)
 	
 	def choseCandidates(self):
-		probabilidades = []
+		sumTrustValues = float(sum(self.trust_values))
+		for i in range(0, len(self.trust_values)):
+			if(self.hosts_list[self.idGroup][i] == self.socketManager.myHost):
+				sumTrustValues -= self.trust_values[i]
+				break;
 
+		probabilidades = []
+		for i in range(0, len(self.trust_values)):
+			if(self.hosts_list[self.idGroup][i] == self.socketManager.myHost):
+				probabilidades.append(0)
+			else:
+				probabilidades.append(self.trust_values[i] / sumTrustValues)
+		probAcumuladas = []
+		actualProb = 0
+		for value in probabilidades:
+			actualProb += value
+			probAcumuladas.append(actualProb)
+		probAcumuladas[-1] = 1.0
+		candidates = []
+		for i in range(0, int(len(self.hosts_list[self.idGroup]) / 2)):
+			randNum = random.uniform(0,1)
+			for j in range(0, len(probAcumuladas)):
+				if(randNum <= probAcumuladas[j]):
+					candidates.append(j)
+					break;
+		return candidates
 
 	def waitCicle(self):
 		self.mutexClycle.acquire()
@@ -192,6 +216,8 @@ class NodoSufAndComis(Nodo):
 		self.mutexVotingPool.release()
 		print(self.cicleVotingPool)
 		self.sendDeleteVotingPoolToAllGroup(lastVote)
+		candidates = self.choseCandidates()
+		print(candidates)
 		self.waitCicle()
 		
 

@@ -1,14 +1,12 @@
-from network import *
+from nodo import *
 
-hosts_list = ["123"]
+suffrageNodeHost = "25.11.187.246"
 
-def test(message, net):
-	print(message)
-	print(net.myHost)
+yo = NodoVotante("25.55.1.76", 9992, suffrageNodeHost)
 
-net = Network(hosts_list, "123", 9996, test)
-net.sendMessage("Hola amiguito", "25.55.1.76")
-print("Done")
+yo.sendVote(0, "voteTest1")
+yo.sendVote(0, "voteTest2")
+
 
 
 

@@ -1,5 +1,8 @@
 from SocketManager import *
 import random
+import time
+
+TIME_TO_SLEEP_IN_CICLE = 10
 
 SplitDelimitator = ';'
 VotingNodeStr = "VotingNode"
@@ -7,7 +10,13 @@ SufAndComisStr = "SufAndComisNode"
 SufAndComisPoolStr = "SufAndComisPool"
 SufAndComisNewLeader = "NewLeader"
 SufAndComisDeleteStr = "DeleteVotingPool"
+SufAndComisDeleteResStr = "ResDeleteVotingPool"
 SufAndComisTrustValuesStr = "TrustValues"
+SufAndComisNoticeCandidate = "NoticeCandidate"
+SufAndComisVeredict = "Veredict"
+SufAndComisVeredictPositive = "Positive"
+SufAndComisVeredictNegative = "Negative"
+SufAndComisVerifyVote = "VerifyVote"
 SplitTrustValueDelimitator = ":"
 PingStr = "Ping"
 
@@ -34,6 +43,7 @@ class NodoVotante(Nodo):
 		vote = voteFile.readline()
 		voteFile.close()
 		message += vote.rstrip('\n')
+		message += str(random.randint(1,123456))
 		res = self.socketManager.sendMessage(message, self.suffrageNodeHost)
 		if(res == NO_CONNECTION):
 			print(self.socketManager.myHost + ": No hay coneccion al nodo de sufragio " + self.suffrageNodeHost)
@@ -53,6 +63,12 @@ class NodoSufAndComis(Nodo):
 	threadOfCiclo = 0
 	mutexClycle = 0
 	mutexVotingPool = 0
+	mutexAuxCount = 0
+	mutexVeredicts = 0
+	auxCount = 0
+	veredicts = {}
+	actualVoteId = 0
+
 	cicleFlag = False #Con esto se ve si hay ciclo activo
 	def __init__(self, host, port, hosts_list, idGroup, initLeader, toleranceValue, voteUmbral):
 		Nodo.__init__(self, host, port, self.messageHandlerFunction)
@@ -66,9 +82,14 @@ class NodoSufAndComis(Nodo):
 		self.voteUmbral = voteUmbral
 		self.mutexClycle = threading.Lock()
 		self.mutexVotingPool = threading.Lock()
+		self.mutexAuxCount = threading.Lock()
+		self.mutexVeredicts = threading.Lock()
 		self.mutexClycle.acquire()
 		self.threadOfCiclo = 0
 		self.cicleFlag = False
+		self.actualVoteId = 0
+		self.auxCount = 0
+		veredicts = {}
 		if(host == initLeader):
 			self.threadOfCiclo = threading.Thread(target = self.waitCicle)
 			self.threadOfCiclo.start()
@@ -96,24 +117,44 @@ class NodoSufAndComis(Nodo):
 			elif(splitMessageList[1] == SufAndComisDeleteStr):
 				print("Eliminar voting Pool desde " + clientHost)
 				self.mutexVotingPool.acquire()
-				votingPoolCopy = self.votingPool[:]
+				self.cicleVotingPool = self.votingPool[:]
 				self.votingPool = []
 				self.mutexVotingPool.release()
 				lastVote = splitMessageList[2]
 				actualI = 0
-				for i in range(len(votingPoolCopy) - 1, -1, -1):
-					if(lastVote == votingPoolCopy[i]):
+				for i in range(len(self.cicleVotingPool) - 1, -1, -1):
+					if(lastVote == self.cicleVotingPool[i]):
 						actualI = i
 						break
 				self.mutexVotingPool.acquire()
-				for i in range(actualI + 1, len(votingPoolCopy)):
-					self.votingPool.append(votingPoolCopy[i])
+				for i in range(actualI + 1, len(self.cicleVotingPool)):
+					self.votingPool.append(self.cicleVotingPool[-1])
+					self.cicleVotingPool = self.cicleVotingPool[:-1]
 				self.mutexVotingPool.release()
+				message = SufAndComisStr + SplitDelimitator + SufAndComisDeleteResStr
+				self.socketManager.sendMessage(message, clientHost)
 			elif(splitMessageList[1] == SufAndComisTrustValuesStr):
 				print("Trust Values desde " + clientHost)				
 				self.trust_values = [float(i) for i in splitMessageList[2].split(SplitTrustValueDelimitator)]
 				self.threadOfCiclo = threading.Thread(target = self.startClicle)
 				self.threadOfCiclo.start()
+			elif(splitMessageList[1] == SufAndComisDeleteResStr):
+				print("Respuesta voting Pool desde " + clientHost)
+				#auxCount += 1
+				#if(auxCount == len(self.hosts_list[self.idGroup]) - 1):
+				#	mutexAuxCount.release()
+			elif(splitMessageList[1] == SufAndComisVerifyVote):
+				print("Orden de verificacion desde " + clientHost)
+				self.threadOfCiclo = threading.Thread(target = self.verifyVote, args=(int(splitMessageList[2]),))
+				self.threadOfCiclo.start()
+			elif(splitMessageList[1] == SufAndComisVeredict):
+				print("Veredicto desde " + clientHost)
+				self.mutexVeredicts.acquire()
+				if(int(splitMessageList[3]) == self.actualVoteId):
+					self.veredicts[clientHost] = splitMessageList[2]
+				self.mutexVeredicts.release()
+			elif(splitMessageList[1] == SufAndComisNoticeCandidate):
+				print("Noticia de candidato desde " + clientHost)
 			elif(splitMessageList[1] == PingStr):
 				print("Ping desde " + clientHost)
 			else:
@@ -147,10 +188,18 @@ class NodoSufAndComis(Nodo):
 		message = SufAndComisStr + SplitDelimitator + SufAndComisDeleteStr + SplitDelimitator + lastVote
 		self.sendToAllGroup(message)
 
+	def sendNoticeToCandidates(self, candidates):
+		message = SufAndComisStr + SplitDelimitator + SufAndComisNoticeCandidate
+		self.sendToAllCandidates(message, candidates)
+
 	def sendToAllGroup(self, message):
 		for host in self.hosts_list[self.idGroup]:
 			if(host != self.socketManager.myHost):
 				self.socketManager.sendMessage(message, host)				
+
+	def sendToAllCandidates(self, message, candidates):
+		for i in candidates:
+			self.socketManager.sendMessage(message, self.hosts_list[self.idGroup][i])			
 
 	def choseLeader(self):
 		res = NO_CONNECTION
@@ -201,6 +250,13 @@ class NodoSufAndComis(Nodo):
 					break;
 		return candidates
 
+	def verifyVote(self, voteId):
+		#TODO
+		print("Verificando voto: " + self.cicleVotingPool[voteId])
+		message = SufAndComisStr + SplitDelimitator + SufAndComisVeredict + SplitDelimitator + SufAndComisVeredictPositive + SplitDelimitator + str(voteId)
+		self.socketManager.sendMessage(message, self.host_leader)
+
+
 	def waitCicle(self):
 		self.mutexClycle.acquire()
 		self.choseLeader();
@@ -215,11 +271,52 @@ class NodoSufAndComis(Nodo):
 		self.votingPool = []
 		self.mutexVotingPool.release()
 		print(self.cicleVotingPool)
+		auxCount = 0
 		self.sendDeleteVotingPoolToAllGroup(lastVote)
 		candidates = self.choseCandidates()
 		print(candidates)
+		self.sendNoticeToCandidates(candidates)
+		verifiedVotes = self.cicleVerifyVotes(candidates)
+		print(verifiedVotes)
 		self.waitCicle()
-		
+
+
+	def cicleVerifyVotes(self, candidates):
+		self.actualVoteId = 0
+		verifiedVotes = []
+		for i in range(0, len(self.cicleVotingPool)):
+			message = SufAndComisStr + SplitDelimitator + SufAndComisVerifyVote + SplitDelimitator + str(self.actualVoteId)
+			self.sendToAllCandidates(message, candidates)
+			time.sleep(TIME_TO_SLEEP_IN_CICLE)
+			self.mutexVeredicts.acquire()
+			self.actualVoteId  += 1
+			self.mutexVeredicts.release()
+			positiveVeredicts = 0
+			negativeVeredicts = 0
+			for cand in candidates:
+				host = self.hosts_list[self.idGroup][cand]
+				if(host in self.veredicts):
+					if(self.veredicts[host] == SufAndComisVeredictPositive):
+						positiveVeredicts += 1
+					else:
+						negativeVeredicts += 1
+			mayoria = 0
+			if(positiveVeredicts > negativeVeredicts):
+				mayoria = SufAndComisVeredictPositive
+			elif(positiveVeredicts < negativeVeredicts):
+				mayoria = SufAndComisVeredictNegative
+			for cand in candidates:
+				host = self.hosts_list[self.idGroup][cand]
+				if not(host in self.veredicts):
+					self.trust_values[cand] *= self.toleranceValue
+				elif(self.veredicts[host] != mayoria):
+					self.trust_values[cand] *= self.toleranceValue
+			if(mayoria == SufAndComisVeredictPositive):
+				verifiedVotes.append(self.cicleVotingPool[self.actualVoteId - 1])
+		return verifiedVotes
+
+
+
 
 
 

@@ -1,8 +1,12 @@
+import sys
+sys.path.append("./Blockchain")
 from SocketManager import *
+from block import *
 import random
 import time
 
 TIME_TO_SLEEP_IN_CICLE = 10
+TIME_TO_SLEEP_IN_CICLE_BLOCK = 10
 
 SplitDelimitator = ';'
 VotingNodeStr = "VotingNode"
@@ -17,7 +21,11 @@ SufAndComisVeredict = "Veredict"
 SufAndComisVeredictPositive = "Positive"
 SufAndComisVeredictNegative = "Negative"
 SufAndComisVerifyVote = "VerifyVote"
+SufAndComisVerifyVotesValues = "VerifyVotesValues"
+SufAndComisNewBlockVeredict = "NewBlockVeredict"
+SufAndComisNewBlock = "NewBlock"
 SplitTrustValueDelimitator = ":"
+SplitGeneralValueDelimitator = ":"
 PingStr = "Ping"
 
 #TODO poner mutex para el votingPool
@@ -68,9 +76,13 @@ class NodoSufAndComis(Nodo):
 	auxCount = 0
 	veredicts = {}
 	actualVoteId = 0
+	verifiedVotesValues = []
+	blockchainPath = ""
+	createBlockFlag = False
+
 
 	cicleFlag = False #Con esto se ve si hay ciclo activo
-	def __init__(self, host, port, hosts_list, idGroup, initLeader, toleranceValue, voteUmbral):
+	def __init__(self, host, port, hosts_list, idGroup, initLeader, toleranceValue, voteUmbral, blockchainPath):
 		Nodo.__init__(self, host, port, self.messageHandlerFunction)
 		self.hosts_list = hosts_list
 		self.idGroup = idGroup
@@ -89,6 +101,8 @@ class NodoSufAndComis(Nodo):
 		self.cicleFlag = False
 		self.actualVoteId = 0
 		self.auxCount = 0
+		self.verifiedVotesValues = []
+		self.blockchainPath = blockchainPath
 		veredicts = {}
 		if(host == initLeader):
 			self.threadOfCiclo = threading.Thread(target = self.waitCicle)
@@ -119,7 +133,7 @@ class NodoSufAndComis(Nodo):
 				self.mutexVotingPool.acquire()
 				self.cicleVotingPool = self.votingPool[:]
 				self.votingPool = []
-				self.mutexVotingPool.release()
+				self.mutexVotingPool.release()				
 				lastVote = splitMessageList[2]
 				actualI = 0
 				for i in range(len(self.cicleVotingPool) - 1, -1, -1):
@@ -130,6 +144,7 @@ class NodoSufAndComis(Nodo):
 				for i in range(actualI + 1, len(self.cicleVotingPool)):
 					self.votingPool.append(self.cicleVotingPool[-1])
 					self.cicleVotingPool = self.cicleVotingPool[:-1]
+				print(self.cicleVotingPool)
 				self.mutexVotingPool.release()
 				message = SufAndComisStr + SplitDelimitator + SufAndComisDeleteResStr
 				self.socketManager.sendMessage(message, clientHost)
@@ -153,6 +168,22 @@ class NodoSufAndComis(Nodo):
 				if(int(splitMessageList[3]) == self.actualVoteId):
 					self.veredicts[clientHost] = splitMessageList[2]
 				self.mutexVeredicts.release()
+			elif(splitMessageList[1] == SufAndComisVerifyVotesValues):
+				print("Votos verificados desde " + clientHost)
+				self.verifiedVotesValues = [int(i) for i in splitMessageList[2].split(SplitGeneralValueDelimitator)]
+				self.threadOfCiclo = threading.Thread(target = self.generateBlock)
+				self.threadOfCiclo.start()
+			elif(splitMessageList[1] == SufAndComisNewBlockVeredict):
+				print("Nuevo veredicto de bloque desde " + clientHost)
+				self.mutexVeredicts.acquire()
+				if(self.createBlockFlag == True):
+					self.veredicts[clientHost] = splitMessageList[2]
+				self.mutexVeredicts.release()
+			elif(splitMessageList[1] == SufAndComisNewBlock):
+				print("Nuevo bloque desde " + clientHost)
+				self.verifiedVotesValues = [int(i) for i in splitMessageList[2].split(SplitGeneralValueDelimitator)]
+				self.threadOfCiclo = threading.Thread(target = self.addNewBlock)
+				self.threadOfCiclo.start()
 			elif(splitMessageList[1] == SufAndComisNoticeCandidate):
 				print("Noticia de candidato desde " + clientHost)
 			elif(splitMessageList[1] == PingStr):
@@ -256,6 +287,21 @@ class NodoSufAndComis(Nodo):
 		message = SufAndComisStr + SplitDelimitator + SufAndComisVeredict + SplitDelimitator + SufAndComisVeredictPositive + SplitDelimitator + str(voteId)
 		self.socketManager.sendMessage(message, self.host_leader)
 
+	def generateBlock(self):
+		verifiedVotes = [self.cicleVotingPool[i] for i in self.verifiedVotesValues]
+		print(verifiedVotes)
+		newBlock = Block()
+		newBlock.createBlock(verifiedVotes, self.blockchainPath)
+		print("Bloque generado: " + newBlock.blockHash)
+		message = SufAndComisStr + SplitDelimitator + SufAndComisNewBlockVeredict + SplitDelimitator + newBlock.blockHash
+		self.socketManager.sendMessage(message, self.host_leader)
+
+	def addNewBlock(self):
+		verifiedVotes = [self.cicleVotingPool[i] for i in self.verifiedVotesValues]
+		newBlock = Block()
+		newBlock.createBlock(verifiedVotes, self.blockchainPath)
+		newBlock.addBlockToChain(self.blockchainPath)
+
 
 	def waitCicle(self):
 		self.mutexClycle.acquire()
@@ -278,12 +324,15 @@ class NodoSufAndComis(Nodo):
 		self.sendNoticeToCandidates(candidates)
 		verifiedVotes = self.cicleVerifyVotes(candidates)
 		print(verifiedVotes)
+		self.cicleVerifyBlock(candidates, verifiedVotes)
+		print("Fin del cliclo")
 		self.waitCicle()
 
 
 	def cicleVerifyVotes(self, candidates):
 		self.actualVoteId = 0
 		verifiedVotes = []
+		self.verifiedVotesValues = []
 		for i in range(0, len(self.cicleVotingPool)):
 			message = SufAndComisStr + SplitDelimitator + SufAndComisVerifyVote + SplitDelimitator + str(self.actualVoteId)
 			self.sendToAllCandidates(message, candidates)
@@ -313,8 +362,56 @@ class NodoSufAndComis(Nodo):
 					self.trust_values[cand] *= self.toleranceValue
 			if(mayoria == SufAndComisVeredictPositive):
 				verifiedVotes.append(self.cicleVotingPool[self.actualVoteId - 1])
+				self.verifiedVotesValues.append(i)
 		return verifiedVotes
 
+	def cicleVerifyBlock(self, candidates, verifiedVotes):
+		verifiedVotesValuesStr = ""
+		for i in range(0, len(self.verifiedVotesValues)):
+			verifiedVotesValuesStr += str(self.verifiedVotesValues[i])
+			if(i != len(self.verifiedVotesValues) - 1):
+				verifiedVotesValuesStr += SplitGeneralValueDelimitator
+		message = SufAndComisStr + SplitDelimitator + SufAndComisVerifyVotesValues + SplitDelimitator + verifiedVotesValuesStr
+		
+		
+		self.veredicts = {}
+		self.createBlockFlag = True
+		self.sendToAllCandidates(message, candidates)
+		time.sleep(TIME_TO_SLEEP_IN_CICLE_BLOCK)
+		self.mutexVeredicts.acquire()
+		self.createBlockFlag = False
+		self.mutexVeredicts.release()
+		veredictsHashs = {}
+		for cand in candidates:
+			host = self.hosts_list[self.idGroup][cand]
+			if(host in self.veredicts):
+				if not(self.veredicts[host] in veredictsHashs):
+					veredictsHashs[self.veredicts[host]] = 1
+				else:
+					veredictsHashs[self.veredicts[host]] += 1
+		mayoria = -1
+		hashMayoria = 0
+		for hashValue, value in veredictsHashs.iteritems():
+			if(mayoria < value):
+				mayoria = value
+				hashMayoria = hashValue
+		for cand in candidates:
+			host = self.hosts_list[self.idGroup][cand]
+			if not(host in self.veredicts):
+				self.trust_values[cand] *= self.toleranceValue
+			elif(self.veredicts[host] != hashMayoria):
+				self.trust_values[cand] *= self.toleranceValue			
+		newBlock = Block()
+		newBlock.createBlock(verifiedVotes, self.blockchainPath)
+		print("hashMayoria: " + hashMayoria)
+		print("Hashgenerado: " + newBlock.blockHash)
+		if(newBlock.blockHash == hashMayoria):
+			newBlock.addBlockToChain(self.blockchainPath)
+			print("Bloque creado " + newBlock.blockHash)
+		else:
+			print("PELIGROOO: Aleeerta soy un nodo malisioso")
+		message = SufAndComisStr + SplitDelimitator + SufAndComisNewBlock + SplitDelimitator + verifiedVotesValuesStr
+		self.sendToAllGroup(message)
 
 
 

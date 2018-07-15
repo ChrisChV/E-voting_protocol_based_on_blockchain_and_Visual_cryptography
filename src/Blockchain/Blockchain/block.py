@@ -7,6 +7,13 @@ BlockChainConfInitBlock = "init"
 BLOCK_ACCEPTED = 1
 BLOCK_REJECTED = 0
 
+def getLastBlock(pathToBlockchain):
+	blockchainConfFile = open(pathToBlockchain + "/" + BlockChainConfFileName, 'r')
+	initBlock = blockchainConfFile.readline().rstrip('\n')
+	lastBlock = blockchainConfFile.readline().rstrip('\n')
+	blockchainConfFile.close()
+	return lastBlock
+
 class Block:
 	blockHash = ""
 	votes = []
@@ -23,9 +30,9 @@ class Block:
 			data += vote + BlockSplitDelimiator
 		data += self.parentHash
 		return data
-	def createBlock(self, voteList, parentHash):
+	def createBlock(self, voteList, pathToBlockchain):
 		self.votes = voteList[:]
-		self.parentHash = parentHash
+		self.parentHash = getLastBlock(pathToBlockchain)
 		self.timestamp = str(time.time())
 		data = self.generateData()
 		self.blockHash = getHash(data)
@@ -56,7 +63,6 @@ class Block:
 		newBlock.write(self.parentHash + '\n')
 		newBlock.write(self.timestamp + '\n')
 		newBlock.close()
-
 
 
 

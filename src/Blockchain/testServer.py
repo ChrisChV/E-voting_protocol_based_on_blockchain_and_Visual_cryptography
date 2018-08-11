@@ -1,9 +1,9 @@
 from nodo import *
 
-hosts_list = [["192.168.1.4", "192.168.1.6"]]
+hosts_list = [["172.16.3.98", "172.16.3.130"]]
 
-myHost = "192.168.1.4"
-myLeader = "192.168.1.4"
+myHost = "172.16.3.98"
+myLeader = "172.16.3.98"
 blockchainPath = "./TestBC"
 toleranceValue = 0.5
 voteUmbral = 2

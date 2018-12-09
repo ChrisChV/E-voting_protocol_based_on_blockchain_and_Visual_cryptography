@@ -1,5 +1,5 @@
 from hash import *
 
-word = "Hola mundo soy el cosido de AnG"
+word = "Hola mundo soy el cosito de Rosii"
 
 print(getHash(word))

@@ -8,8 +8,6 @@
 using namespace std;
 using namespace CryptoPP;
 
-
-
 int main(){
 
 	assert(1 != 2);

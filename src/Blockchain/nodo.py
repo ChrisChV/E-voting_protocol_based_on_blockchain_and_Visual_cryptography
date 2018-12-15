@@ -1,5 +1,5 @@
 import sys
-sys.path.append("./Blockchain")
+sys.path.append("Blockchain/Blockchain")
 from SocketManager import *
 from block import *
 import random
@@ -51,7 +51,7 @@ class NodoVotante(Nodo):
 		vote = voteFile.readline()
 		voteFile.close()
 		message += vote.rstrip('\n')
-		message += str(random.randint(1,123456))
+		#message += str(random.randint(1,123456))
 		res = self.socketManager.sendMessage(message, self.suffrageNodeHost)
 		if(res == NO_CONNECTION):
 			print(self.socketManager.myHost + ": No hay coneccion al nodo de sufragio " + self.suffrageNodeHost)

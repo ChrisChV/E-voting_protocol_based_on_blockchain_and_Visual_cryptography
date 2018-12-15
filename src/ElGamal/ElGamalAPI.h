@@ -5,6 +5,8 @@
 #include <cryptopp/osrng.h>
 #include <cryptopp/integer.h>
 #include <cryptopp/elgamal.h>
+#include <cryptopp/nbtheory.h>
+#include "cryptopp/dh2.h"
 #include <cryptopp/files.h>
 #include "../Utils/Utils.h"
 

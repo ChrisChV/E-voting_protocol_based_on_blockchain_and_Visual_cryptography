@@ -5,8 +5,8 @@ from block import *
 import random
 import time
 
-TIME_TO_SLEEP_IN_CICLE = 10
-TIME_TO_SLEEP_IN_CICLE_BLOCK = 10
+TIME_TO_SLEEP_IN_CICLE = 1
+TIME_TO_SLEEP_IN_CICLE_BLOCK = 1
 
 SplitDelimitator = ';'
 VotingNodeStr = "VotingNode"
@@ -60,13 +60,13 @@ class NodoVotante(Nodo):
 
 class NodoSufAndComis(Nodo):
 	hosts_list = [] #Lista de listas de los host de cada nodo dividido en grupos
-	trust_values = []
-	host_leader = ""
-	idGroup = 0
-	actualBlock = 0
-	votingPool = []
-	cicleVotingPool = []
-	toleranceValue = 0
+	trust_values = [] #Lista de valores de confianza
+	host_leader = "" #Host del lider
+	idGroup = 0	
+	actualBlock = 0 
+	votingPool = [] #Pool de todos los votos aun no procesados
+	cicleVotingPool = [] #Pool del ciclo actual
+	toleranceValue = 0 
 	voteUmbral = 0
 	threadOfCiclo = 0
 	mutexClycle = 0
@@ -149,6 +149,7 @@ class NodoSufAndComis(Nodo):
 				message = SufAndComisStr + SplitDelimitator + SufAndComisDeleteResStr
 				self.socketManager.sendMessage(message, clientHost)
 			elif(splitMessageList[1] == SufAndComisTrustValuesStr):
+				#Recibe los valores de confianza y comienza  un nuevo cliclo
 				print("Trust Values desde " + clientHost)				
 				self.trust_values = [float(i) for i in splitMessageList[2].split(SplitTrustValueDelimitator)]
 				self.threadOfCiclo = threading.Thread(target = self.startClicle)
@@ -331,8 +332,8 @@ class NodoSufAndComis(Nodo):
 
 	def cicleVerifyVotes(self, candidates):
 		self.actualVoteId = 0
-		verifiedVotes = []
-		self.verifiedVotesValues = []
+		verifiedVotes = [] # votos completos
+		self.verifiedVotesValues = [] # solo indices de los votos verificados
 		for i in range(0, len(self.cicleVotingPool)):
 			message = SufAndComisStr + SplitDelimitator + SufAndComisVerifyVote + SplitDelimitator + str(self.actualVoteId)
 			self.sendToAllCandidates(message, candidates)
@@ -413,19 +414,4 @@ class NodoSufAndComis(Nodo):
 		message = SufAndComisStr + SplitDelimitator + SufAndComisNewBlock + SplitDelimitator + verifiedVotesValuesStr
 		self.sendToAllGroup(message)
 
-
-
-
-
 		
-
-
-
-
-
-
-
-
-
-
-

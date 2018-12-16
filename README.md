@@ -1,6 +1,6 @@
 # E-voting protocol based on Blockchain and Visual Cryptography
 
-Implementación de Tesis de pregrado para vatación electrónica no remota.
+Implementación de Tesis de pregrado para votación electrónica remota.
 
 ## Configuración
 

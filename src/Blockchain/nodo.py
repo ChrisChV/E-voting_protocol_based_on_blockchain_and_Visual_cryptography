@@ -1,9 +1,11 @@
 import sys
 sys.path.append("Blockchain/Blockchain")
+#sys.path.append("./Blockchain")
 from SocketManager import *
 from block import *
 import random
 import time
+import os
 
 TIME_TO_SLEEP_IN_CICLE = 1
 TIME_TO_SLEEP_IN_CICLE_BLOCK = 1
@@ -37,22 +39,21 @@ class Nodo:
 
 
 class NodoVotante(Nodo):
-	suffrageNodeHost = ""
-	def __init__(self, host, port, suffrageNodeHost):
+	def __init__(self, host, port):
 		Nodo.__init__(self, host, port, self.messageHandlerFunction)
-		self.suffrageNodeHost = suffrageNodeHost
 
 	def messageHandlerFunction(self, message, clientHost):
 		print(message)
 
-	def sendVote(self, blockChainID, voteFileName):
+	def sendVote(self, blockChainID, voteFileName, suffrageNodeHost):
 		message = VotingNodeStr + SplitDelimitator + str(blockChainID) + SplitDelimitator
 		voteFile = open(voteFileName, 'r')
 		vote = voteFile.readline()
+		vote += voteFile.readline()
 		voteFile.close()
 		message += vote.rstrip('\n')
 		#message += str(random.randint(1,123456))
-		res = self.socketManager.sendMessage(message, self.suffrageNodeHost)
+		res = self.socketManager.sendMessage(message, suffrageNodeHost)
 		if(res == NO_CONNECTION):
 			print(self.socketManager.myHost + ": No hay coneccion al nodo de sufragio " + self.suffrageNodeHost)
 		return res
@@ -112,15 +113,17 @@ class NodoSufAndComis(Nodo):
 	def messageHandlerFunction(self, message, clientHost):
 		splitMessageList = message.split(SplitDelimitator)
 		if(splitMessageList[0] == VotingNodeStr):
-			print("Nuevo voto desde " + clientHost + " :" + splitMessageList[2])
+			#print("Nuevo voto desde " + clientHost + " :" + splitMessageList[2])
+			print("Nuevo voto desde " + clientHost)
 			self.sendVotingToAllGroup(splitMessageList[2], int(splitMessageList[1]))
-			self.socketManager.sendMessage("Voto recibido", clientHost)
+			self.socketManager.sendMessage("Voto recibido por la blockchain " + str(self.idGroup), clientHost)
 		elif(splitMessageList[0] == SufAndComisStr):
 			if(splitMessageList[1] == SufAndComisPoolStr):
 				self.mutexVotingPool.acquire()
 				self.votingPool.append(splitMessageList[2])
 				self.mutexVotingPool.release()
-				print("Nuevo voto desde " + clientHost + " :" + splitMessageList[2])
+#				print("Nuevo voto desde " + clientHost + " :" + splitMessageList[2])
+				print("Nuevo voto desde " + clientHost)
 				if(self.socketManager.myHost == self.host_leader and self.cicleFlag == False and len(self.votingPool) >= self.voteUmbral):
 					self.cicleFlag = True
 					self.mutexClycle.release()
@@ -144,7 +147,7 @@ class NodoSufAndComis(Nodo):
 				for i in range(actualI + 1, len(self.cicleVotingPool)):
 					self.votingPool.append(self.cicleVotingPool[-1])
 					self.cicleVotingPool = self.cicleVotingPool[:-1]
-				print(self.cicleVotingPool)
+				#print(self.cicleVotingPool)
 				self.mutexVotingPool.release()
 				message = SufAndComisStr + SplitDelimitator + SufAndComisDeleteResStr
 				self.socketManager.sendMessage(message, clientHost)
@@ -233,6 +236,21 @@ class NodoSufAndComis(Nodo):
 		for i in candidates:
 			self.socketManager.sendMessage(message, self.hosts_list[self.idGroup][i])			
 
+	def splitVote(self, message):
+		tokens = message.split('\n')
+		command = "../runSplitVote " + tokens[0] + " " + tokens[1] + " " + len(self.hosts_list)
+		os.system(command)
+		credentials = []
+		votes = []
+		for i in range(0, len(self.hosts_list)):
+			file = open("Shares" + str(i), 'r');
+			shareCredntial = file.readline().rstrip('\n');
+			shareVote = file.readline().rstrip('\n');
+			credentials.append(shareCredntial)
+			votes.append(shareVote)
+			file.close();
+		return credentials, votes
+
 	def choseLeader(self):
 		res = NO_CONNECTION
 		newLeader = ""
@@ -284,13 +302,14 @@ class NodoSufAndComis(Nodo):
 
 	def verifyVote(self, voteId):
 		#TODO
-		print("Verificando voto: " + self.cicleVotingPool[voteId])
+#		print("Verificando voto: " + self.cicleVotingPool[voteId])
+		print("Verificando voto")
 		message = SufAndComisStr + SplitDelimitator + SufAndComisVeredict + SplitDelimitator + SufAndComisVeredictPositive + SplitDelimitator + str(voteId)
 		self.socketManager.sendMessage(message, self.host_leader)
 
 	def generateBlock(self):
 		verifiedVotes = [self.cicleVotingPool[i] for i in self.verifiedVotesValues]
-		print(verifiedVotes)
+		#print(verifiedVotes)
 		newBlock = Block()
 		newBlock.createBlock(verifiedVotes, self.blockchainPath)
 		print("Bloque generado: " + newBlock.blockHash)
@@ -317,14 +336,14 @@ class NodoSufAndComis(Nodo):
 		self.cicleVotingPool = self.votingPool[:]
 		self.votingPool = []
 		self.mutexVotingPool.release()
-		print(self.cicleVotingPool)
+#		print(self.cicleVotingPool)
 		auxCount = 0
 		self.sendDeleteVotingPoolToAllGroup(lastVote)
 		candidates = self.choseCandidates()
 		print(candidates)
 		self.sendNoticeToCandidates(candidates)
 		verifiedVotes = self.cicleVerifyVotes(candidates)
-		print(verifiedVotes)
+		#print(verifiedVotes)
 		self.cicleVerifyBlock(candidates, verifiedVotes)
 		print("Fin del cliclo")
 		self.waitCicle()

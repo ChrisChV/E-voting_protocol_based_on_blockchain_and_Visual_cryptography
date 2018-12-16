@@ -4,8 +4,11 @@ import sys;
 
 SERVER_HOSTS_FILE_PATH = "../Conf/serverHosts"
 
+myHost = "192.168.1.13"
+
 
 def getHostList(fileName):
+    myIdGroup = 0
     file = open(fileName, 'r')
     ips = []
     groupsIDs = []
@@ -13,6 +16,10 @@ def getHostList(fileName):
         tokens = line.split(" ")
         print(tokens)
         ips.append(tokens[1])
+	print(tokens[1])
+	if(tokens[1] == myHost):
+	    print("AAA")
+	    myIdGroup = int(tokens[3].rstrip('\n'))
         groupsIDs.append(int(tokens[3].strip('\n')))
     hosts_list = []
     numOfGroups = max(groupsIDs) + 1
@@ -21,19 +28,15 @@ def getHostList(fileName):
     for i in range(0, len(ips)):
         hosts_list[groupsIDs[i]].append(ips[i])
     file.close()
-    return hosts_list
-
-
-
+    return hosts_list, myIdGroup
 
 #hosts_list = [["192.168.1.10", "192.168.1.11","192.168.1.12","192.168.1.13"]]
 
-hosts_list = getHostList(SERVER_HOSTS_FILE_PATH)
+hosts_list, myIdGroup = getHostList(SERVER_HOSTS_FILE_PATH)
 print (hosts_list)
+print(myIdGroup)
 
 
-
-myHost = "192.168.1.12"
 myLeader = "192.168.1.12"
 blockchainPath = "./TT"
 toleranceValue = 0.5

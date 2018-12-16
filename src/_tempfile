@@ -1,13 +1,17 @@
 from nodo import *
 import sys;
 SERVER_HOSTS_FILE_PATH = "../Conf/serverHosts"
+myHost = "192.168.1.13"
 def getHostList(fileName):
+	myIdGroup = 0
 	file = open(fileName, 'r')
 	ips = []
 	groupsIDs = []
 	for line in file:
 		tokens = line.split()
 		ips.append(tokens[1])
+		if(tokens[1] == myHost):
+			 myIdGroup = int(tokens[3].rstrip('\n'))
 		groupsIDs.append(int(tokens[3].strip('\n')))
 	hosts_list = []
 	numOfGroups = max(groupsIDs) + 1
@@ -16,11 +20,11 @@ def getHostList(fileName):
 	for i in range(0, len(ips)):
 		hosts_list[groupsIDs[i]].append(ips[i])
 	file.close()
-	return hosts_list
-hosts_list = getHostList(SERVER_HOSTS_FILE_PATH)
-myHost = "192.168.1.13"
+	return hosts_list, myIdGroup
+hosts_list, myIdGroup = getHostList(SERVER_HOSTS_FILE_PATH)
 myLeader = "192.168.1.10"
 blockchainPath = "./TestBC"
 toleranceValue = 0.5
 voteUmbral = 2
-yo = NodoSufAndComis(myHost,9999, hosts_list, 0, myLeader, toleranceValue, voteUmbral, blockchainPath)
+print("My group:" + str(myIdGroup))
+yo = NodoSufAndComis(myHost,9999, hosts_list, myIdGroup, myLeader, toleranceValue, voteUmbral, blockchainPath)

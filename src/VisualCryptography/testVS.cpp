@@ -4,12 +4,10 @@
 
 using namespace std;
 
-int main(){
+int main(){	
 	CryptoPP::AutoSeededRandomPool rng;
-	size_t tamPalabra = 512;
 	int numOfKeys = 2;
 	int numOfShares = 3;
-	Integer palabraSecreta(rng, tamPalabra);	
 	cout<<palabraSecreta<<endl<<endl;
 	vector<Integer> keys;
 	VS::generateKeys(numOfKeys, tamPalabra, keys);

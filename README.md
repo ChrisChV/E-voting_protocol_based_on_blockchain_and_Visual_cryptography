@@ -35,3 +35,10 @@ $> runNewVote <numOfVotes>
 * Autamáticamente se crearán y se cifrarán votos para luego enviarlos a uno de los servidores.
 * Disfrutar del espectáculo.
 * Nota: si desea reiniciar el blockchain en todos los servidores, ejecutar el programa src/runResetServerBlockchain
+
+## Video
+
+Explicación del código, la configuración y ejecución de algunas pruebas:
+
+https://www.youtube.com/watch?v=axks5RftIs4
+

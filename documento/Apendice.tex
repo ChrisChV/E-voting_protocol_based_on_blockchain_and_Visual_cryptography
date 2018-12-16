@@ -1,0 +1,196 @@
+\chapter{Formato de la plantilla}
+\hrule \bigskip  \vspace*{1cm}
+%------------------------------------------------------------------------
+
+Antes de seguir debes de tener en tu computadora la clase
+\verb"unsa.cls" y demás archivos relacionados. En esta clase se
+encuentra la información sobre el formato casi oficial de la tesis
+en la EPIS UNSA, así como muchos comandos e instrucciones
+especiales que facilitarán tu existencia mientras escribes tu
+tesis. He puesto todos los archivos necesarios en Internet, en
+\texttt{http://www.spc.org.pe/tutoriales/tesis-pregrado/} , a
+disposición de todo el que esté interesado. El camino más sencillo
+es descomprimir todos los archivos que vienen en el paquete dentro
+de una nueva carpeta en tu computadora donde guardes normalmente
+tus archivos (por ejemplo: \verb"Mis Documentos\Tesis\").
+
+\section{Datos de la tesis}
+
+Entre los archivos incluidos en el paquete encontrarás un
+\verb"Tesis.tex" que puedes abrir en tú editor de texto, aunque es
+recomendable usar el WinEdt (en esta versión de la plantilla se
+uso éste software).
+
+Cuando hayas abierto el archivo verás algunos comandos, quizá la
+mayoría de ellos desconocidos, pero no te preocupes demasiado por
+eso en este momento. Por ahora, como estoy suponiendo que quieres
+empezar lo más pronto posible a escribir tu tesis, no voy a
+analizar de manera detallada el contenido de este archivo. Voy a
+ir directamente sobre lo que sí debes de saber para poder
+comenzar. Como podrás ver, en el archivo hay un grupo de líneas de
+de la forma:
+
+\begin{singlespace}
+\begin{verbatim}
+        \documentclass[11pt,openright,final]{tuuniversidad}
+        \title{Escribe el titulo de tu tesis}
+        \author{Escribe tu nombre}
+        \examinerone{Nombre del Presidente}{Presidente}
+        \examinertwo{Nombre del Secretario}{Secretario}
+        \examinerthree{Nombre del Integrante}{Integrante}
+        \examinerfour{Jurado externo o adicional}{Externo}{UNSA}
+        \dedicate{Escribe la dedicatoria}
+\end{verbatim}
+\end{singlespace}
+
+Estos se llaman campos y sirven para indicar al documento la
+información particular de tu tesis. Entre cada pareja de símbolos
+\verb"{ }" tienes que escribir el valor de ese campo. Por ejemplo
+en \verb"\title{ }" va el título de tu tesis, en \verb"\author{ }"
+tu nombre completo y así sucesivamente. Estos datos serán
+utilizados para construir la portada de tu tesis. Los campos
+\verb"\examinerone{}" \ldots \verb"\examinerfour{}" sirven para
+indicar los nombres de los miembros que integrarán al jurado en tu
+defensa de tesis. Generalmente son solo tres jurados, razón por la
+cual éste ultimo es opcional y su impresión esta en función de
+\verb"\approved{}" como veremos en la siguiente sección
+
+\section{Generar de la tesis}
+
+En realidad lo anterior solo hemos cambiado el valor de las
+variables como ya lo hemos explicado, ahora recién comenzaremos a
+seleccionar lo que deseamos imprimir para nuestra tesis, más abajo
+podemos apreciar que con \verb"\begin{document}" lo que hacemos es
+iniciar el documento y las dos respectivas carátulas o portadas.
+Estas no poseen paginación (obviamente).
+
+\begin{singlespace}
+\begin{verbatim}
+        \begin{document}
+        \makeFirstCover \makeSecondCover
+\end{verbatim}
+\end{singlespace}
+
+A partir del \verb"frontmatter" recién comenzamos a paginar con
+números romanos el contenido es muy intuitivo y fácil de darnos
+cuenta los campos que podemos varias, en el caso de
+\verb"\approved{\tres}" nos representa que tenemos tres jurados y
+con \verb"{\cuatro}" obviamente si fuese el caso de un jurado
+adicional (aunque por ahora es poco usual puede darse el caso y
+seria más recomendable).
+
+\begin{singlespace}
+\begin{verbatim}
+        \begin{frontmatter}
+        \approved{\tres}%  {\tres} or {\cuatro}
+        \dedicatory
+        \begin{singlespace}
+        \tableofcontents \listoffigures \listoftables \pagebreak
+        \end{singlespace}
+        \myAcknowledgements{Agradecimientos}%
+        \myResumen{Resumen}%
+        \myAbstrac{Abstract}%
+        \end{frontmatter}
+\end{verbatim}
+\end{singlespace}
+
+Los valores de \verb"Agradecimientos" , \verb"Resumen" ,
+\verb"Abstract" son nombres de archivos \verb" .tex" externos que
+nos permiten tener ordenado el archivo principal.
+
+A partir de aquí considero que ya tienes una idea muy clara sobre
+el manejo de la plantilla con el fin del ambiente
+\verb"frontmatter" recien comienza la paginación normal, y el
+desarrollo de tu tesis, el índice general, de figuras y cuadros se
+genera automáticamente mediante los comandos indicados arriba
+(claramente en inglés \emph{of course}).
+
+Aquí puedes agregar tanto archivos externos como sea necesario
+mediante una simple linea, como por ejemplo:
+\verb"\include{CapN}", agrega el archivo \verb"CapN.tex" al
+contenido total de la tesis, de manera análoga podes quitar un
+archivo si lo ves por conveniente, el formato bibliográfico
+utilizado en este caso es el de la ACM (\emph{Association
+Computing Machinary}), existen muchos estilos disponibles en
+internet como de la IEEE, Harvard, etc. que puedes cambiar con
+solo modificar el valor del campo. en
+\verb"\bibliographystyle{acm}" de \verb"acm" por \verb"ieee",
+siempre y cuando dispongas de ese estilo en tu PC.
+
+\begin{singlespace}
+\begin{verbatim}
+        \pagestyle{fancyplain}
+        \include{Cap1}
+        \include{Cap2}
+        \include{Cap3}
+        \include{Cap4}
+        \include{Cap5}
+        \include{Cap6}
+        \myappendix{Apendice}
+        \begin{singlespace}
+        \bibliographystyle{acm}
+        \mybibliography{biblio}
+        \end{singlespace}
+        \end{document}
+\end{verbatim}
+\end{singlespace}
+
+
+Toda la bibliografía que uses y referencies debe esta en
+\verb"\mybibliography{biblio}" significa que el archivo destinado
+a esta labor es \verb"biblio.bib", con WinEdt existen macros que
+te permiten llenar de una forma muy sencilla los campos de una
+bibbliografia, por ejemplo:
+
+\begin{singlespace}
+\begin{verbatim}
+      @INPROCEEDINGS{Lerner00,
+        AUTHOR =       {Barbara Staudt Lerner},
+        TITLE =        {A Model for Compound Type Changes in Schemes},
+        BOOKTITLE =    {ACM Transactions on Database Systems},
+        YEAR =         {2000},
+        volume =       {25},
+        number =       {1},
+        pages =        {83-127},
+        month =        {March},
+        organization = {ACM},}
+\end{verbatim}
+\end{singlespace}
+
+Para referencias de autores es muy simple basta con colocar
+\verb"\cite{Lerner00}" de esta forma el autor, previamente definido
+en el archivo biblio.bib quedara simplemente como un link: así
+\cite{Lerner00} y este es procesado automáticamente en la
+bibliografía(incluyendo su número u orden correlativo según le
+corresponda), más ejemplos son: \cite{Abiteboul91}, \cite{Batini86},
+\cite{Bertino92}, \cite{Atkinson89}
+
+
+\chapter{Archivos Incluidos}
+\hrule \bigskip  \vspace*{1cm}
+%------------------------------------------------------------------------
+
+\begin{quote}
+
+Archivos del formato de tesis.
+
+\begin{description}
+    \item[unsa.cls] el formato general del documento de tesis.
+    \item[Tesis.tex] tendrá la estructura principal de tu tesis.
+    \item[Agradecimientos.tex] contenido de los agradecimientos
+    \item[Resumen.tex] contenido del resumen
+    \item[Abstract.tex] contenido del  abstract.
+    \item[Cap1.tex] contenido del capítulo 1.
+    \item[Cap2.tex] contenido del capítulo 2.
+    \item[Apendice.tex] ejemplo de un apéndice.
+    \item[biblio.bib] ejemplos de referencias bibliográficas.
+\end{description}
+
+Logotipos de la UNSA.
+
+\begin{description}
+    \item[escuela.eps] logo EPIS en tonos de grises, formato eps.
+    \item[logo.eps] logo UNSA en tonos de grises, formato eps.
+\end{description}
+
+\end{quote}

@@ -1,0 +1,51 @@
+\BOOKMARK [0][-]{chapter*.3}{Agradecimientos}{}% 1
+\BOOKMARK [0][-]{chapter*.5}{Abstract}{}% 2
+\BOOKMARK [0][-]{chapter.1}{Introducci\363n}{}% 3
+\BOOKMARK [1][-]{section.1.1}{Contribuciones}{chapter.1}% 4
+\BOOKMARK [1][-]{section.1.2}{Planteamiento del problema}{chapter.1}% 5
+\BOOKMARK [1][-]{section.1.3}{Justificaci\363n}{chapter.1}% 6
+\BOOKMARK [1][-]{section.1.4}{Objetivos}{chapter.1}% 7
+\BOOKMARK [1][-]{section.1.5}{Estructura de la tesis}{chapter.1}% 8
+\BOOKMARK [0][-]{chapter.2}{Estado del Arte}{}% 9
+\BOOKMARK [0][-]{chapter.3}{Marco Te\363rico}{}% 10
+\BOOKMARK [1][-]{section.3.1}{Voto Electr\363nico}{chapter.3}% 11
+\BOOKMARK [2][-]{subsection.3.1.1}{Sistemas remotos}{section.3.1}% 12
+\BOOKMARK [2][-]{subsection.3.1.2}{Sistemas no remotos}{section.3.1}% 13
+\BOOKMARK [2][-]{subsection.3.1.3}{Sistemas h\355bridos}{section.3.1}% 14
+\BOOKMARK [2][-]{subsection.3.1.4}{Requerimientos Constitucionales}{section.3.1}% 15
+\BOOKMARK [2][-]{subsection.3.1.5}{Requerimientos de Seguridad}{section.3.1}% 16
+\BOOKMARK [1][-]{section.3.2}{Preliminares criptogr\341ficos}{chapter.3}% 17
+\BOOKMARK [2][-]{subsection.3.2.1}{Criptograf\355a asim\351trica}{section.3.2}% 18
+\BOOKMARK [2][-]{subsection.3.2.2}{Cifrado Homom\363rfico}{section.3.2}% 19
+\BOOKMARK [2][-]{subsection.3.2.3}{Mezclado Criptogr\341fico}{section.3.2}% 20
+\BOOKMARK [2][-]{subsection.3.2.4}{Grupo C\355clico Multiplicativo}{section.3.2}% 21
+\BOOKMARK [2][-]{subsection.3.2.5}{Esquema de Compromiso}{section.3.2}% 22
+\BOOKMARK [2][-]{subsection.3.2.6}{Prueba de conocimiento cero}{section.3.2}% 23
+\BOOKMARK [1][-]{section.3.3}{Blockchain}{chapter.3}% 24
+\BOOKMARK [2][-]{subsection.3.3.1}{Arquitectura del Blockchain}{section.3.3}% 25
+\BOOKMARK [2][-]{subsection.3.3.2}{Red Blockchain}{section.3.3}% 26
+\BOOKMARK [2][-]{subsection.3.3.3}{Privacidad y firma digital}{section.3.3}% 27
+\BOOKMARK [2][-]{subsection.3.3.4}{Algoritmos de Consenso}{section.3.3}% 28
+\BOOKMARK [1][-]{section.3.4}{Visual Cryptography}{chapter.3}% 29
+\BOOKMARK [0][-]{chapter.4}{Propuesta}{}% 30
+\BOOKMARK [1][-]{section.4.1}{Preparaci\363n}{chapter.4}% 31
+\BOOKMARK [1][-]{section.4.2}{Proceso de votaci\363n}{chapter.4}% 32
+\BOOKMARK [2][-]{subsection.4.2.1}{Cifrado mediante ElGamal}{section.4.2}% 33
+\BOOKMARK [2][-]{subsection.4.2.2}{Descomposici\363n mediante Visual Cryptography}{section.4.2}% 34
+\BOOKMARK [1][-]{section.4.3}{Blockchain}{chapter.4}% 35
+\BOOKMARK [2][-]{subsection.4.3.1}{Arquitectura del blockchain propuesto}{section.4.3}% 36
+\BOOKMARK [2][-]{subsection.4.3.2}{Topolog\355a de la red blockchain}{section.4.3}% 37
+\BOOKMARK [2][-]{subsection.4.3.3}{Algoritmo de validaci\363n y consenso}{section.4.3}% 38
+\BOOKMARK [1][-]{section.4.4}{Proceso de conteo}{chapter.4}% 39
+\BOOKMARK [2][-]{subsection.4.4.1}{Regeneraci\363n de los votos}{section.4.4}% 40
+\BOOKMARK [2][-]{subsection.4.4.2}{Conteo de votos}{section.4.4}% 41
+\BOOKMARK [0][-]{chapter.5}{Experimentos y Resultados}{}% 42
+\BOOKMARK [1][-]{section.5.1}{An\341lisis de Seguridad}{chapter.5}% 43
+\BOOKMARK [2][-]{subsection.5.1.1}{Privacidad eterna}{section.5.1}% 44
+\BOOKMARK [2][-]{subsection.5.1.2}{Libre de recibo}{section.5.1}% 45
+\BOOKMARK [2][-]{subsection.5.1.3}{Confiabilidad}{section.5.1}% 46
+\BOOKMARK [1][-]{section.5.2}{Implementaci\363n del protocolo}{chapter.5}% 47
+\BOOKMARK [0][-]{chapter.6}{Conclusiones y trabajo futuro}{}% 48
+\BOOKMARK [1][-]{section.6.1}{Conclusiones}{chapter.6}% 49
+\BOOKMARK [1][-]{section.6.2}{Contribuciones}{chapter.6}% 50
+\BOOKMARK [1][-]{section.6.3}{Trabajos futuros}{chapter.6}% 51

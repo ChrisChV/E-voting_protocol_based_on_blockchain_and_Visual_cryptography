@@ -1,0 +1,57 @@
+\renewcommand{\tablename}{\bf Tabla}
+\chapter{Estado del Arte}\label{background}
+
+\hrule \bigskip \vspace*{1cm}
+
+Existe un considerable número de investigaciones que se centran en resolver los diferentes problemas que presenta la votación electrónica. En \cite{grewal2015vote} se muestra un nuevo sistema de votación electrónica: Du-Vote, que elimina la suposición de que los votantes deben confiar en computadoras de uso general, logrando así resolver el problema de las máquinas de votación maliciosas por parte de los usuarios. Esta propuesta consigue la privacidad y la seguridad de los votos gracias al hardware criptográfico. Por otro lado, ellos dan por hecho que el servidor que verifica y valida los votos se encuentra seguro, y no muestran una forma de verificar si el servidor está haciendo o no correctamente su trabajo, por mal funcionamiento o estar en posesión de una persona malintencionada. \\
+En \cite{tiryakioglu2016trvote} proponen TRVote, un nuevo sistema de votación electrónica basado en máquinas de votación DRE para asegurar la confiabilidad. Mediante el DRE propuesto, su método evita el problema de las plataformas de votación maliciosas, pero su método, al igual que el anterior, se basa en hardware criptográfico, y producir los DRE puede llegar a ser demasiado costoso. \\
+En \cite{aranha2016crowdsourced} intentan verificar la integridad de los resultados electorales y mejorar la transparencia en el proceso de votación con una mayor participación de la gente. En su protocolo, Voc$\hat{e}$ Fiscal, lo logran emitiendo un recibo, para que luego los votantes le tomen una fotografía y lo envíen mediante una aplicación móvil a una base de datos de resultados independientes. Luego, verifican los resultados comparando la base de datos de resultados independientes con la base de datos de resultados oficiales. Esta propuesta, al no ser libre de recibos, es susceptible a los ataques de coerción, y además no garantiza la seguridad del sistema ante posibles maquinas de votación maliciosas. \\ 
+En \cite{gjosteen2016experiment} proponen un método estadístico para verificar la integridad del sistema luego del proceso de votación. El modelo proporciona evidencia convincente de que el protocolo criptográfico no ha sido atacado durante el proceso de votación. Se basa en la suposición de que la mayoría de los votantes están dispuestos y son capaces de usar el protocolo criptográfico según sea necesario. Este modelo puede ser utilizado en diferentes protocolos de votación electrónica para verificar si el sistema se encuentra íntegro, pero este análisis se realiza luego de acabado el proceso de votación, no puede dar una alerta durante el proceso. \\
+En \cite{locher2016coercion} se propone un protocolo criptográfico de votación que cumple con la verificabilidad y la seguridad del sistema, además cumple con ser resistente a la coerción y libre de recibos. Este protocolo permite que los votantes puedan votar más de una vez. Los votantes pueden eliminar su voto o cambiarlo, pero si llegan a votar por dos candidatos diferentes, el voto es anulado en el proceso de conteo de votos. El problema de esto es que el sistema se pueda inundar con demasiados votos y hace que la eficiencia del sistema baje o caiga completamente. Además, mantienen el problema de las máquinas de votación maliciosas. \\
+En \cite{neumann2016secivo} se propone un modelo para comparar protocolos de votación para poder hacer un análisis y luego poder hacer una proposición de cual tipo de sistema de votación es mejor usar para un contexto en particular. \\
+En el estado del arte también hay investigaciones que proponen usar un modelo de \textit{blockchain} para la votación electrónica. En \cite{hanifatunnisa2017blockchain} utilizan un modelo de \textit{blockchain} basado en el \textit{blockchain} de BitCoin. En resumen, el protocolo verifica el voto, actualiza la base de datos, crea un bloque nuevo y realiza el broadcast del nuevo bloque.
+La diferencia con el modelo de \textit{blockchain} tradicional es que este protocolo no utiliza un algoritmo de consenso, por lo tanto, no resuelve de manera eficiente el problema de las máquinas de votación maliciosas.
+En \cite{mccorry2017smart} proponen un sistema de votación electrónica utilizando los contratos inteligentes que ofrece el \textit{blockchain} de Ethereum. Esta propuesta amolda su protocolo al \textit{blockchain} de Ethereum que ya se encuentra implementado y que es usado por toda la Internet. El problema con esto es que cada contrato inteligente tiene un costo, que depende del costo actual del token de Ethereum, el Ether. Actualmente el Ether es una de las criptomonedas más importantes del mercado \cite{nofer2017blockchain} y su precio está en constante cambio. Esto puede conllevar a un gran gasto si se implementa el protocolo anteriormente descrito. En la presente investigación, el modelo \textit{blockchain} es el que se va a moldear al protocolo de votación y no va a tener ningún costo adicional que dependa del mercado de criptomonedas. \\
+En la Tabla \ref{tab:compTR} se muestra un resumen comparativo de los sistemas y protocolos mensionados antes.
+
+\begin{table}[]
+    \centering
+    \resizebox{\columnwidth}{!}{
+    \begin{tabular}{|l|l|l|l|} \hline
+         \textbf{Sistema/Protocolo} & \textbf{Basado en} & \textbf{Ventajas} & \textbf{Desventajas} \\
+         \textbf{de votación} & & & \\ \hline
+         
+         Du-Vote \cite{grewal2015vote} & Hardware & $\sbullet$ Evita máquinas de votación & $\sbullet$ No asegura los servidores \\
+         &  criptográfico &  maliciosas &  \\
+         & & $\sbullet$ El hardware aumenta la &  \\
+         & & seguridad y privacidad & \\ \hline
+         
+         TRVote \cite{tiryakioglu2016trvote} & Máquinas & $\sbullet$ Evita máquinas de votación & $\sbullet$ El hardware puede ser \\
+         & DRE & maliciosas  & costoso y difícil de usar \\ \hline
+         
+         Voc$\hat{e}$ Fiscal \cite{aranha2016crowdsourced} & Comparación por & $\sbullet$ Aumenta la transparencia & $\sbullet$ Ataques de coerción  \\
+         & \textit{crowdsourcing} & $\sbullet$ Mayor participación & $\sbullet$ Máquinas de votación \\
+         & & ciudadana & maliciosas \\ \hline
+         
+         An experiment on & Modelo & $\sbullet$ Detecta ataques terminado & $\sbullet$ No detecta ataques \\
+         the security of the & estadístico & el proceso de votación & durante el proceso de \\
+         Norwegian electronic & & $\sbullet$ Se acomoda a diferentes & votación \\
+         voting protocol \cite{gjosteen2016experiment} & & protocolos de votación & \\ \hline
+         
+         Blockchain Based & Blockchain de & $\sbullet$ Seguridad en los datos & $\sbullet$ No resuelve el consenso \\
+         E-Voting Recording & Bitcoin & $\sbullet$ Transparencia & $\sbullet$ Máquinas de votación \\
+         System Design \cite{hanifatunnisa2017blockchain} & (público) & $\sbullet$ Persistencia &  maliciosas \\ \hline
+         
+         A Smart Contract & Blockchain de & $\sbullet$ Seguridad en los datos & $\sbullet$ La votación depende del \\
+         for Boardroom Voting & Ethereum & $\sbullet$ Transparencia & costo del Ether \\
+         with Maximum Voter & (público) & $\sbullet$ Resuelve el consenso  & $\sbullet$ El costo del Ether es muy \\
+         Privacy \cite{mccorry2017smart} & & &  cambiante \\ \hline
+    \end{tabular}
+    }
+    \caption{Comparación de los sistemas y protocolos de votación}
+    \label{tab:compTR}
+    
+\end{table}
+
+
+

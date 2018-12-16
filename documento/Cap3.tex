@@ -1,0 +1,202 @@
+\chapter{Marco Teórico}\label{theory}
+\hrule \bigskip \vspace*{1cm}
+
+\section{Voto Electrónico}
+
+Los sistemas de voto electrónico (\textit{e-voting}) realizan el proceso convencional de votación mediante la tecnología. Estos sistemas abarcan varios temas: Interacción humano computador, criptografía, comunicación, redes computacionales y seguridad en redes y datos. Los sistemas de \textit{e-voting} pueden ser de tres tipos: los sistemas remotos; donde todo el proceso se hace de forma remota por medio de una aplicación conectada a Internet en las computadoras personales de cada votante, los sistemas no remotos; que involucran todo tipo de interacción con el votante (máquinas de votación electrónica, sistemas de escaneo) que se hacen en un lugar de votación controlado, y la votación híbrida; que combina los dos tipos de \textit{e-voting} anteriores.
+
+\subsection{Sistemas remotos}
+
+Los sistemas remotos generalmente son aplicaciones web que mandan el voto de los votantes a un servidor central previa identificación. Aquí juega un rol importante la seguridad de los datos cuando viajan al servidor central y la autenticación del votante, esto porque cualquier persona con acceso a internet puede entrar a la aplicación, y el objetivo es que no se puede suplantar a otras personas o que se pueda votar una segunda vez.
+
+\subsection{Sistemas no remotos}
+
+Los sistemas de este tipo más conocidos son los sistemas basados en máquinas de votación de Grabación directa electrónica (\textit{Direct-recording electronic - DRE}). El diseño de estas máquinas es un tema de investigación en el área de Interacción humano computador \cite{tiryakioglu2016trvote}. La funcionalidad principal de un DRE es registrar el voto de los votantes, mandarlo a una localización central y, dependiendo del protocolo de votación, se imprime un comprobante. 
+
+\subsection{Sistemas híbridos}
+
+Estos sistemas surgieron por la falta de Internet en algunos sectores.  Este tipo de sistemas combina los sistemas remotos y los no remotos. El sistema es capaz de soportar tanto votos provenientes de las computadoras personales de los votantes como los votos provenientes de DREs. Dependiendo del sistema, los DREs que se implementan guardan los votos en un disco interno y luego son transferidos al servidor central, o se colocan computadoras personales con la aplicación ejecutándose localmente. 
+
+\subsection{Requerimientos Constitucionales}
+
+Un sistema de \textit{e-voting} tiene que implementar de manera eficiente el proceso de votación cumpliendo con los requerimientos de un estado democrático \cite{gritzalis2002principles}. Estos requerimientos son: democracia, generalidad, libertad, igualdad, secretismo, franquedad.
+
+\subsubsection{Democracia}
+
+Es el más importante de los requerimientos y es el encargado de hacer que un sistema de \textit{e-voting} tenga los mismos atributos que un proceso de votación convencional. Estos atributos son:
+
+\begin{itemize}
+    \item \textbf{Transparencia:} El sistema de votación debe proporcionar todos los medios para convencer a los votantes de que se esté cometiendo fraude dentro o por el mismo sistema de \textit{e-voting}.
+    \item \textbf{Verificabilidad:} El sistema de votación debe proporcionan una manera de verificar los votos y los resultados finales del proceso de votación.
+    \item \textbf{Rendición de cuentas:} El sistema de votación debe de registrar todas las operaciones relacionadas con el proceso de votación.
+    \item \textbf{Confiabilidad:} El sistema de votación debe de asegurarse que el resultado final de las elecciones corresponda a los votos emitidos en el proceso de votación.
+    \item \textbf{Seguridad:} Este punto abarca todo el sistema de votación. El sistema debe de ser seguro en todos los aspectos (base de datos, transmisión de datos, registro, autenticación, etc).
+    \item \textbf{Simplicidad y accesibilidad:} El sistema de votación debe ser simple y fácil de usar para el votante.
+\end{itemize}
+
+\subsubsection{Generalidad}
+
+Este requerimiento dicta que todos los votantes pueden participar en el proceso de votación y nadie debe ser excluido. Este es uno de los mayores problemas que enfrentan los sistemas de \textit{e-voting} en general, ya que la tecnología no siempre está al alcance de todas las personas. Por esta razón, se dice que los sistemas de \textit{e-voting} deben ser una alternativa al proceso convencional de votación. 
+
+\subsubsection{Libertad}
+
+Este requerimiento se refiere a que el proceso de votación se debe llevar a cabo sin ningún tipo manipulación, coerción, o cualquier tipo de influencia. Se debe cumplir la libre expresión de las preferencias de los votantes, en el sistema de votación, esto es la posibilidad de emitir un voto nulo o en blanco. En el sistema de votación no debe aparecer propaganda de ningún tipo, mucho menos política. Otros requisitos que se deben cumplir son la resistencia a la coerción y la libertad de recibos, los cuales se explicará con mejor detalle en la Sección \ref{sec:reqsec}.
+
+\subsubsection{Igualdad}
+
+Para lograr este requerimiento se necesita cumplir con tres sub-requerimientos. Los candidatos deben ser considerados iguales en el sistema, esto quiere decir que son iguales tanto en el \textit{front-end} (las imágenes de los candidatos deben mostrarse de la misma forma) como en el \textit{back-end} (cada voto vale como una para todos los candidatos). Los votantes deben ser considerados iguales, esto quiere decir que el voto de cada votante vale como uno. Esto también aplica en los sistemas híbridos, los votantes que utilicen en DRE deben ser iguales a los votantes que utilicen la aplicación por Internet. Y por último, los votantes sólo deben de ser capaces de dar un sólo voto y éste no puede ser modificado. La igualdad tiene mucho que ver con la transparencia de los datos, ya que el sistema debe ser capaz de convencer a las personas de que sus votos cuentan como uno para el candidato por el cual votaron.
+
+\subsubsection{Secretismo}
+
+Este requerimiento nos indica que los datos del votante (información personal y su voto) debe de mantenerse en secreto durante todo el proceso de votación, nadie, ni siquiera los organizadores ni personas del gobierno, deben de poder acceder a los datos del votante. Aquí también se habla de la necesidad de separar los procesos de registro y autenticación; éstos deben estar claramente definidos en el sistema. El secretismo entra en conflicto con la transparencia, ya que se torna difícil lograr la transparencia cuando no se tiene que mostrar los datos de los votantes.
+
+\subsubsection{Franquedad}
+
+Este requerimiento dicta que no debe haber ningún intermediario en el proceso de votación (Ninguna persona está autorizada para votar por otra persona). En el proceso de autenticación, se debe verificar que la persona no esté suplantando la identidad de otra. Otro sub-requerimiento que es necesario para que la franquedad se cumpla, es que los votos deben de ser guardados y contados correctamente.
+
+\subsection{Requerimientos de Seguridad}\label{sec:reqsec}
+
+La presente tesis está centrada en aspectos de seguridad de los sistemas de \textit{e-voting}. Los protocolos de seguridad y la criptografía mantiene la privacidad y la integridad de los datos de los votantes, y la integridad de todo el sistema. De esto depende que las personas sigan teniendo confianza en este tipo de sistemas. Idealmente, una sistema de \textit{e-voting} se quiere que sea privado, libre de recibos y resistente a la coerción. 
+
+\subsubsection{Privacidad eterna}\label{sec:theoryPrivEter}
+
+La mejor forma de mantener la privacidad es utilizando métodos criptográficos. En el proceso de votación, la forma más simple de mantener la privacidad es cifrando la información y el voto de cada uno de los votantes. Nadie, ni siquiera los organizadores ni  los candidatos, debe poder descifrar los datos. Pero aún así existe una gran preocupación: un voto pueda ser vinculado a una persona y pueda ser descifrado décadas en el futuro con una tecnología avanzada. De este problema surgió la necesidad de que los sistemas de votación tengan privacidad eterna. 
+
+``Un esquema de votación tiene privacidad eterna si su privacidad no depende de suposiciones de dureza criptográfica'' \cite{bernhard2017public}. 
+
+\subsubsection{Resistente a la coerción}
+
+La coerción es cuando una persona, el coersor, incita, manipula o compra a un votante durante el proceso de votación con el fin de guiar el comportamiento del votante. En los procesos de votación, tanto tradicionales como electrónicos, existen diferentes formas de coerción: cuando se fuerza a la persona a votar por un candidato en especial (\textit{forced vote}), cuando se fuerza a la persona a votar por un candidato aleatorio (\textit{forced randomization}), cuando se fuerza a la persona a no votar (\textit{forced abstention}), y cuando se fuerza a la persona a entregar sus credenciales (\textit{forced surrender of credentials)}. Por todo lo anterior, los sistemas de votación deben de ser resistentes a la coerción.
+
+``Un esquema de votación es resistente a la coerción si cumple lo siguiente: Existe una estrategia para un votante forzado $V$ tal que, para cualquier estrategia adoptada por el coersor $C$, $V$ sea capaz de emitir su verdadero voto de manera que sea indistinguible de C, siguiendo, de igual manera, las instrucciones de C'' \cite{bernhard2017public}.
+
+\subsubsection{Libre de recibos}\label{sec:theoryLibreReci}
+
+Al querer resolver problemas de verificabilidad, algunos sistemas de votación electrónica \cite{kumar2011analysis} \cite{aranha2016crowdsourced} \cite{adida2008helios} \cite{burton2016vvote} utilizan recibos para verificar los resultados finales, pero esto puede generar otros problemas. Si el protocolo de votación utiliza un recibo que no está muy bien diseñado, un coersor puede utilizar el recibo para verificar el voto del votante forzado.
+
+``Un sistema de votación es libre de recibos si el votante es incapaz de probar cómo y por quién voto, aun así esté confabulado con el coersor y se desvía del protocolo para tratar de presentar una prueba'' \cite{bernhard2017public}.
+
+
+\section{Preliminares criptográficos}
+
+\subsection{Criptografía asimétrica}
+
+La criptografía asimétrica o la criptografía de clave pública \cite{matela2017asymmetric} utiliza dos claves para enviar un mensaje. Una clave es privada, y es mantenida en secreto, y la otra clave es pública y puede ser mostrada a cualquier usuario. La clave pública no es suficiente para obtener, mediante ataques, la clave privada de un usuario. Existen dos tipos de criptografía asimétrica que difieren en la utilización de las claves:
+\begin{itemize}
+    \item \textbf{Cifrado de mensaje: } El emisor cifra el mensaje con la clave pública del receptor, y el receptor descifra el mensaje con su clave privada.
+    \item \textbf{Firma digital: } El emisor cifra el mensaje con su clave privada, y el receptor descifra el mensaje con la clave pública del emisor.
+\end{itemize}
+
+Existen diferentes métodos que utilizan criptografía asimétrica, pero en esta investigación sólo utilizaremos dos: RSA \cite{mitali2014survey}; donde la seguridad radica en el problema de la factorización de números enteros, y ElGamal \cite{desmedt2011elgamal}; donde la seguridad radica en el problema del logaritmo discreto.
+
+\subsection{Cifrado Homomórfico}
+
+Un esquema de cifrado es homomórfico \cite{acar2017survey} cuando sobre una operación `$\star$', soporta la siguiente fórmula:
+$$E(m1) \star E(m2) = E(m1 \star m2),\: \forall m1, m2 \in M,$$
+done $E$ es el algoritmo de cifrado y $M$ es el conjunto de posibles mensajes. \\
+Cuando un esquema de cifrado soporta o la suma o la multiplicación, se dice que es parcialmente homomórfico. Cuando un esquema criptográfico soporta tanto la suma como la multiplicación, se dice que es totalmente homomórfico.
+
+\subsection{Mezclado Criptográfico}\label{sec:theoryMezCri}
+
+El objetivo principal de un mezclador criptográfico es desvincular los valores de salida de los valores de entrada \cite{locher2016receipt}. Dado un conjunto de entrada $Z = (z_1,...,z_n)$, el mezclador aplica una función unidireccional con llave $f_{k_i} : Z \rightarrow Z$ a cada valor de entrada $z_i \in Z$, con una llave $k_i$ perteneciente a un conjunto de llaves $K = (k_n,...k_n)$. Luego, se permutan los resultados escogiendo una permutación aleatoria $\phi:\{1,...,n\} \rightarrow \{1,...,n\}$. La salida del mezclador es una lista $Z'= (z_1',...,z_n')$ de valores $z_j' = f_{k_i}(z_i)$ con índices $j = \phi(i)$. Todo lo anterior se puede escribir con la siguietne fórmula: 
+$$Z' = shuffle^{\phi}_{f_K}(Z)$$
+
+\subsection{Grupo Cíclico Multiplicativo}
+
+Un grupo cíclico $G_p$ de orden $p$, es un conjunto de $p-1$ valores que pueden ser obtenidos por un sólo elemento $g$ al cual se le llama generador. Un grupo cíclico multiplicativo es un grupo cíclico donde cada valor $G_i$ se genera con la siguiente fórmula:
+$$G_i = g^a\:mod\:p$$
+para algún $a \in \{0,1,...,p-1\}$. \\
+En criptografía se utilizan grupos cíclicos de orden primo, $p$ es un número primo. \\
+Un grupo cíclico $H_q \subset \mathbb{Z}^*_p$ es sub-grupo de $G_p$ cuando existe un factor común $k$ de $p$ y $q$. \\
+Un grupo cíclico $H_q \subset \mathbb{Z}^*_p$ es sub-grupo de $G_p$ de orden primo $p$ cuando existe un factor común $k = (p-1)/q$.
+
+\subsection{Esquema de Compromiso}
+
+Un esquema de compromiso \cite{groth2009homomorphic} permite comprometerse a un mensaje oculto para que pueda ser revelado luego El esquema de compromiso es utilizado para verificar que el mensaje ha llegado intacto y evitar que ninguna de las dos partes, ni un tercera, haga modificaciones una vez el compromiso se haya efectuado. Uno de los esquemas de compromiso más utilizado es el esquema de Pedersen \cite{pedersen1991non}.\\
+Dado un grupo cíclico $H_q \subset \mathbb{Z}^*_p$ subgrupo de un grupo cíclico $G_p$ con orden primo $p$. Se obtienen los valores $g$ y $h$ de $H_q$ tal que nadie conozca el valor de $log_g h$; estos valores son públicos. Se quiere comprometer el mensaje $s \in \mathbb{Z}_q$. Se escoje un valor $t \in \mathbb{Z}_q$ de manera aleatoria y se utiliza la siguiente fórmula:
+$$E(s,t) = g^sh^t$$
+Luego, el compromiso puede ser abierto revelando los valores de $s$ y $t$. Se puede observar que si el mensaje $s$ cambia, entonces el valor de $E(s,t)$ va a ser diferente al que se ha obtenido anteriormente, y, además, los valores $E(s,t)$ , $g$ y $h$ no son suficientes para obtener el mensaje $s$.
+
+
+\subsection{Prueba de conocimiento cero}
+
+Una prueba de conocimiento cero \cite{kurmi2015survey} es un protocolo en donde un agente agente probador da todas las evidencias para probar a una agente verificador que una declaración es cierta sin revelar nada más que la verificación de la declaración. Un ejemplo simple es que un agente que tiene una clave pueda probar a otro agente que él tiene esa clave pero sin revelarla. Una prueba de conocimiento cero tiene las siguientes propiedades:
+\begin{itemize}
+    \item \textbf{Totalidad:} La posibilidad de fallar en el protocolo que hace que un probador convenza a un verificador, debe ser lo más mínima posible.
+    \item \textbf{Solvencia:} Si la declaración es falsa, el probador no debe poder convencer al verificador que la declaración sea verdadera.
+    \item \textbf{Conocimiento cero:} El verificador sólo debe tener conocimiento de que la declaración es verdadera o falsa, no se le brinda más información.
+\end{itemize}
+
+
+
+Existen dos tipos de pruebas de conocimiento cero:
+\begin{itemize}
+    \item \textbf{Pruebas de conocimiento cero interactivas:} Tanto el probador como el verificador deben estar presentes durante la ejecución del protocolo.
+    \item \textbf{Pruebas de conocimiento cero no interactivas:} No es necesario que el probador y el verificado estén presentes durante la ejecución del protocolo. El probador genera las pruebas necesarias, para que luego el verificador las vea en otro momento.
+\end{itemize}
+
+\section{Blockchain}\label{sec:theoryBlock}
+
+%TODO explicar los tipos de blockchain
+
+Iniciando con una breve historia del \textit{blockchain}, fue propuesto por una persona bajo el seudónimo de ``Satoshi Nakamoto'' en el artículo \cite{nakamoto2008bitcoin}. Inicialmente fue propuesto para ser usado en un sistema de pagos \textit{peer-to-peer} cuyas transacciones podrían ser hechas por Internet sin la necesidad de que una entidad financiera que respaldara dichas transacciones; los mismos nodos del sistema son los encargados de validar cada transacción que se haga en el sistema. \\
+\textit{Blockchain}, en la práctica, es una tecnología de base de datos distribuida, en donde cada nodo es considerado de igual peso en la red. La base de datos se replica en cada uno de los nodos, y es trabajo de ellos mantener la integridad de los datos. \textit{Blockchain} utiliza métodos criptográficos para mantener la seguridad y la privacidad en la red. Además, \textit{blockchain} utiliza algoritmos de consenso para evitar que nodos dañados o mal intencionados puedan modificar o falsificar los datos. \\
+El primer sistema que se implementó fue el BitCoin \cite{nakamoto2008bitcoin} creando una nueva e innovadora economía: Las criptomonedas. Hoy existen numerosos sistemas financieros con base en el \textit{blockchain}: Ethereum \cite{wood2014ethereum}, Ripple \cite{schwartz2014ripple}, Monero \cite{van2013cryptonote}, entre otros. Actualmente, el \textit{blockchain} es utilizado para varias aplicaciones muy distintas al mundo financiero \cite{nofer2017blockchain}, como en el sector salud \cite{azaria2016medrec}, internet de las cosas \cite{hardjono2016cloud}, sistemas de reputación \cite{sharples2016blockchain} y muchas otras más \cite{nofer2017blockchain}\cite{zheng2016blockchain}. \\
+
+
+\subsection{Arquitectura del Blockchain}\label{sec:arqblock}
+
+\textit{Blockchain} es una cadena o secuencia de bloques, los cuales pueden guardar cualquier tipo de información dentro. En la Figura \ref{fig:blockchain} se muestra un ejemplo de arquitectura del blockchain. En cada bloque se guarda un número $n$ de datos o transacciones $TX$. Para poder identificar cada bloque, se juntan todos los datos del bloque y se les aplica una función hash criptográfica. El hash resultante tiene tres funcionalidades, funciona como un identificador del bloque, sirve para la verificación de los datos del mismo bloque, y sirve para la verificación de los datos del siguiente bloque que se agregue a la cadena. \par
+
+\begin{figure}
+    \centering
+    \includegraphics[scale = 0.4]{figures/blockchain.png}
+    \caption{Ejemplo de la arquitectura de Blockchain \cite{zheng2016blockchain}}
+    \label{fig:blockchain}
+\end{figure}
+
+Dado el conjunto de datos $TX^i$ del bloque $i$, el hash $h^i$ siempre va a ser el mismo si se aplica la misma función hash criptográfica a $TX^i$. Si se hace algún pequeño cambio a cualquier dato en $TX^i$, entonces $h^i$ cambiaría completamente. De esta forma es bastante fácil saber si los datos de un bloque fueron modificados, sólo se tiene que verificar la integridad del hash. Los bloques, además de tener su propio hash, tienen el hash del bloque anterior de la cadena, también llamado bloque padre del bloque actual. Dado el conjunto de datos $TX^{i+1}$, el hash $h^{i+1}$ que va a identificar al bloque $i + 1$, va a ser el resultado de aplicar la función hash criptográfica a la unión de $h^{i}$ y $TX^{i+1}$. Esto quiere decir que $h^{i+1}$ depende también de $h^{i}$. En otras palabras, si algún bloque anterior a $i + 1$ es modificado, entonces el hash $h^{i+1}$ cambiaría completamente. Por consiguiente, sólo verificando el hash del último bloque de la cadena, se puede verificar la integridad de todos los datos del \textit{blockchain}. \\
+El \textit{Timestamp} contiene la marca de tiempo del momento en que se creó el bloque, y el \textit{Nonce} es un valor utilizado en los algoritmos de consenso, los cuales se explicarán en la Sección \ref{sec:agcon}.
+
+\subsection{Red Blockchain}
+
+La red de \textit{blockchain} es \textit{peer-to-peer} y distribuida. Cada nodo tiene el mismo peso en la red y está virtualmente conectado con todos los otros nodos de la red. La base de datos es replicada en cada nodo. Dependiendo del uso que se le vaya a dar al \textit{blockchain}, los nodos deben guardar toda la cadena o partes de ella. Por ejemplo, en el caso del BitCoin, los nodos deben guardar toda la cadena, ya que deben verificar que el monto de las nuevas transacciones concuerde con las anteriores. Pero en otros casos, como por ejemplo datos en la nube, gracias a la arquitectura del \textit{blockchain}, no sería necesario que los nodos guarden todos los bloques, sólo sería necesario guardar el último bloque de la cadena, ya que lo único que se verificaría sería la integridad de los datos. Cualquier nodo puede crear un bloque, pero éste es añadido a la cadena cuando es validado por todos los demás nodos. Esta validación se logra de manera efectiva gracias a los algoritmos de consenso.
+
+\subsection{Privacidad y firma digital}
+
+Una característica del \textit{blockchain} es que mantiene la privacidad tanto de los nodos que verifican la cadena como de los nodos que participan en ella. Para lograr esto, \textit{blockchain} utiliza la criptografía asimétrica. En resumen, la criptografía asimétrica o de llave pública, consiste en generar dos llaves: una pública y otra privada. El mensaje es cifrado con la llave privada y es descifrado con la llave pública. En el \textit{blockchain}, para cada nodo en la red se crean las dos llaves, y los nodos son identificados por la llave pública. \\
+Para poder verificar que una transacción en la cadena fue escrita por el un usuario se utiliza una firma digital. Un usuario $a$ hace una transacción al usuario $b$. El usuario $a$ obtiene el hash asociado a la transacción que acaba de hacer, lo cifra con su llave privada y envía la transacción con el hash cifrado al usuario $b$. El usuario $b$ descifra el hash con la llave pública del usuario $a$ verifica si el hash concuerda con la data enviada. De esta forma se logra verificar la identidad de los nodos que hacen transacciones.
+
+
+\subsection{Algoritmos de Consenso}\label{sec:agcon}
+
+El \textit{blockchain}, como toda red distribuida que realiza tareas, tiene que resolver el problema de los generales bizantinos \cite{lamport1982byzantine}. En la investigación presentan un problema de los sistemas distribuidos mediante una analogía. Un grupo de generales bizantinos quiere conquistar una ciudad enemiga. Su plan es posicionarse en diferentes puntos de la ciudad para analizar si es más factible atacar o retirarse, cada uno de los generales da su opinión y se realiza un consenso para poder tomar una decisión. El problema está cuando existen generales traidores y más cuando hay más generales traidores que leales. Los algoritmos de consenso son utilizados para resolver el consenso en redes distribuidas y para evitar que nodos maliciosos o dañados se apoderen de la red. En el modelo original de \textit{blockchain} se propuso un algoritmo de consenso que resolvió estos problemas: \textit{Proof of Work} \cite{nakamoto2008bitcoin}. \\
+El algoritmo de \textit{Proof of Work} nos pone la regla de que los hash de todos los bloques comiencen por un número determinado de ceros. Para esto sirve el campo \textit{Nonce} visto en la Sección \ref{sec:arqblock}. Este valor se agrega al final de los datos y se lo calcula de tal forma de que el hash resultante tenga al inicio los ceros determinados en ese momento. Esto hace que, para poder crear un bloque, necesites calcular el \textit{Nonce}. Dependiendo del número de ceros, la dificultad de crear un bloque aumenta o disminuye. Por lo tanto, para poder agregar nodos fraudulentos a la red, se necesita tener un poder computacional mayor que la mitad de toda la red. \\
+Dependiendo del contexto en el que se esté usando el \textit{blockchain} existen varios algoritmos de consenso \cite{sankar2017survey}. 
+
+\section{Visual Cryptography}
+
+\textit{Visual Cryptography} fue introducido por Naor y Shamir \cite{naor1994visual}. Ellos propusieron un esquema criptográfico basado en la visión humana. El modelo está pensado para cifrar imágenes binarias, pero puede ser adaptado para cualquier tipo de información (texto, imágenes, videos). La idea principal del modelo es generar un número determinado de imágenes, llamadas en la literatura \textit{shares}, a partir de la imagen original. Los \textit{shares} por separado son, a simple vista, información basura, pero cuando se juntan y se sobreponen, se obtiene la imagen original.
+Existen dos tipos de modelos:
+\begin{itemize}
+    \item \textbf{Modelo (n,n):} El sistema genera $n$ \textit{shares} $(n \geq 2)$ y todos los \textit{shares} son necesarios para reconstruir la información original.
+    \item \textbf{Modelo (k,n):} El sistema genera $n$ \textit{shares} $(n \geq 2)$ y sólo son necesarios $k$ \textit{shares} $(2\leq k \leq n)$ para reconstruir la información original.
+\end{itemize}
+
+En imágenes binarias, los píxeles negros son los que contienen la información. En la Figura \ref{fig:visual} se muestran las divisiones de los píxeles de la imagen original, de los dos \textit{shares} generados, y de la imagen original después del descifrado. En este caso, al descifrar, sólo los píxeles negros son reconstruidos completamente, mientras que los píxeles blancos son reconstruidos y descartados con basura.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale = 0.5]{figures/visual.png}
+    \caption{Combinación de píxeles del \textit{Visual Cryptography} \cite{visualSlide}}
+    \label{fig:visual}
+\end{figure}
+
+El método en \cite{naor1994visual} fue propuesto originalmente para cifrar imágenes y que la misma persona lo descifre, como si tuviera los dos \textit{shares} impresos y los superpusiera a contra luz para descifrar la imagen original. Cuando no se necesita de la intervención humana para el descfrado, entonces no es necesario hacer las divisiones de píxeles. \\
+Para un modelo (2,2), uno de los \textit{shares} es generado de forma aleatoria. El segundo es generado aplicando una operación XOR entre la información original y el \textit{share} creado. Se envían los \textit{shares} por el medio de forma separada, para evitar que sean interceptados juntos. El destino recibe los dos \textit{shares} y recupera la información original haciendo una operación XOR entre los dos \textit{shares}. Este esquema criptográfico no necesita de operaciones matemáticas complejas, así que no se necesita de hardware especializado o de última generación para poder utilizar el esquema.
+
+
+
+
+
+

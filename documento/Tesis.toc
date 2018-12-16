@@ -1,0 +1,67 @@
+\select@language {spanish}
+\contentsline {chapter}{Agradecimientos}{\es@scroman {ix}}{chapter*.3}
+\contentsline {chapter}{Abstract}{\es@scroman {xi}}{chapter*.5}
+\contentsline {chapter}{\numberline {1}Introducci\'on}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}Contribuciones}{2}{section.1.1}
+\contentsline {section}{\numberline {1.2}Planteamiento del problema}{3}{section.1.2}
+\contentsline {section}{\numberline {1.3}Justificaci\'on}{4}{section.1.3}
+\contentsline {section}{\numberline {1.4}Objetivos}{5}{section.1.4}
+\contentsline {section}{\numberline {1.5}Estructura de la tesis}{5}{section.1.5}
+\contentsline {chapter}{\numberline {2}Estado del Arte}{6}{chapter.2}
+\contentsline {chapter}{\numberline {3}Marco Te\'orico}{9}{chapter.3}
+\contentsline {section}{\numberline {3.1}Voto Electr\'onico}{9}{section.3.1}
+\contentsline {subsection}{\numberline {3.1.1}Sistemas remotos}{9}{subsection.3.1.1}
+\contentsline {subsection}{\numberline {3.1.2}Sistemas no remotos}{10}{subsection.3.1.2}
+\contentsline {subsection}{\numberline {3.1.3}Sistemas h\IeC {\'\i }bridos}{10}{subsection.3.1.3}
+\contentsline {subsection}{\numberline {3.1.4}Requerimientos Constitucionales}{10}{subsection.3.1.4}
+\contentsline {subsubsection}{Democracia}{10}{section*.9}
+\contentsline {subsubsection}{Generalidad}{11}{section*.10}
+\contentsline {subsubsection}{Libertad}{11}{section*.11}
+\contentsline {subsubsection}{Igualdad}{11}{section*.12}
+\contentsline {subsubsection}{Secretismo}{12}{section*.13}
+\contentsline {subsubsection}{Franquedad}{12}{section*.14}
+\contentsline {subsection}{\numberline {3.1.5}Requerimientos de Seguridad}{12}{subsection.3.1.5}
+\contentsline {subsubsection}{Privacidad eterna}{13}{section*.15}
+\contentsline {subsubsection}{Resistente a la coerci\'on}{13}{section*.16}
+\contentsline {subsubsection}{Libre de recibos}{13}{section*.17}
+\contentsline {section}{\numberline {3.2}Preliminares criptogr\'aficos}{14}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}Criptograf\IeC {\'\i }a asim\'etrica}{14}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.2.2}Cifrado Homom\'orfico}{14}{subsection.3.2.2}
+\contentsline {subsection}{\numberline {3.2.3}Mezclado Criptogr\'afico}{15}{subsection.3.2.3}
+\contentsline {subsection}{\numberline {3.2.4}Grupo C\IeC {\'\i }clico Multiplicativo}{15}{subsection.3.2.4}
+\contentsline {subsection}{\numberline {3.2.5}Esquema de Compromiso}{16}{subsection.3.2.5}
+\contentsline {subsection}{\numberline {3.2.6}Prueba de conocimiento cero}{16}{subsection.3.2.6}
+\contentsline {section}{\numberline {3.3}Blockchain}{17}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}Arquitectura del Blockchain}{18}{subsection.3.3.1}
+\contentsline {subsection}{\numberline {3.3.2}Red Blockchain}{19}{subsection.3.3.2}
+\contentsline {subsection}{\numberline {3.3.3}Privacidad y firma digital}{19}{subsection.3.3.3}
+\contentsline {subsection}{\numberline {3.3.4}Algoritmos de Consenso}{20}{subsection.3.3.4}
+\contentsline {section}{\numberline {3.4}Visual Cryptography}{20}{section.3.4}
+\contentsline {chapter}{\numberline {4}Propuesta}{23}{chapter.4}
+\contentsline {section}{\numberline {4.1}Preparaci\'on}{24}{section.4.1}
+\contentsline {section}{\numberline {4.2}Proceso de votaci\'on}{25}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}Cifrado mediante ElGamal}{25}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}Descomposici\'on mediante Visual Cryptography}{26}{subsection.4.2.2}
+\contentsline {section}{\numberline {4.3}Blockchain}{27}{section.4.3}
+\contentsline {subsection}{\numberline {4.3.1}Arquitectura del blockchain propuesto}{27}{subsection.4.3.1}
+\contentsline {subsection}{\numberline {4.3.2}Topolog\IeC {\'\i }a de la red blockchain}{27}{subsection.4.3.2}
+\contentsline {subsubsection}{Nodos comisionados}{28}{section*.18}
+\contentsline {subsubsection}{Nodos de sufragio}{30}{section*.19}
+\contentsline {subsubsection}{Nodos votantes}{30}{section*.20}
+\contentsline {subsection}{\numberline {4.3.3}Algoritmo de validaci\'on y consenso}{31}{subsection.4.3.3}
+\contentsline {subsubsection}{Preparaci\'on del ciclo}{31}{section*.21}
+\contentsline {subsubsection}{Verificaci\'on de votos}{32}{section*.22}
+\contentsline {subsubsection}{Verificaci\'on de bloques}{32}{section*.23}
+\contentsline {section}{\numberline {4.4}Proceso de conteo}{33}{section.4.4}
+\contentsline {subsection}{\numberline {4.4.1}Regeneraci\'on de los votos}{33}{subsection.4.4.1}
+\contentsline {subsection}{\numberline {4.4.2}Conteo de votos}{33}{subsection.4.4.2}
+\contentsline {chapter}{\numberline {5}Experimentos y Resultados}{35}{chapter.5}
+\contentsline {section}{\numberline {5.1}An\'alisis de Seguridad}{35}{section.5.1}
+\contentsline {subsection}{\numberline {5.1.1}Privacidad eterna}{35}{subsection.5.1.1}
+\contentsline {subsection}{\numberline {5.1.2}Libre de recibo}{36}{subsection.5.1.2}
+\contentsline {subsection}{\numberline {5.1.3}Confiabilidad}{36}{subsection.5.1.3}
+\contentsline {section}{\numberline {5.2}Implementaci\'on del protocolo}{38}{section.5.2}
+\contentsline {chapter}{\numberline {6}Conclusiones y trabajo futuro}{40}{chapter.6}
+\contentsline {section}{\numberline {6.1}Conclusiones}{40}{section.6.1}
+\contentsline {section}{\numberline {6.2}Contribuciones}{41}{section.6.2}
+\contentsline {section}{\numberline {6.3}Trabajos futuros}{41}{section.6.3}

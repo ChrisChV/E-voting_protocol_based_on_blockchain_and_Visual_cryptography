@@ -1,0 +1,70 @@
+This is BibTeX, Version 0.99d (TeX Live 2015/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: Tesis.aux
+A level-1 auxiliary file: Agradecimientos.aux
+A level-1 auxiliary file: Abstract.aux
+A level-1 auxiliary file: Cap1.aux
+A level-1 auxiliary file: Cap2.aux
+A level-1 auxiliary file: Cap3.aux
+A level-1 auxiliary file: Cap4.aux
+A level-1 auxiliary file: Cap5.aux
+The style file: IEEEtran.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Database file #1: biblio.bib
+-- IEEEtran.bst version 1.14 (2015/08/26) by Michael Shell.
+-- http://www.michaelshell.org/tex/ieeetran/bibtex/
+-- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
+Warning--empty journal in visualSlide
+Warning--empty author in elecciones2011
+Warning--empty booktitle in elecciones2011
+Warning--empty author in elecciones2016
+Warning--empty booktitle in elecciones2016
+Warning--empty journal in nakamoto2008bitcoin
+
+Done.
+You've used 41 entries,
+            4087 wiz_defined-function locations,
+            1037 strings with 14236 characters,
+and the built_in function-call counts, 29659 in all, are:
+= -- 2385
+> -- 625
+< -- 253
++ -- 342
+- -- 100
+* -- 1385
+:= -- 4443
+add.period$ -- 99
+call.type$ -- 41
+change.case$ -- 41
+chr.to.int$ -- 585
+cite$ -- 47
+duplicate$ -- 2160
+empty$ -- 2510
+format.name$ -- 128
+if$ -- 6953
+int.to.chr$ -- 0
+int.to.str$ -- 41
+missing$ -- 360
+newline$ -- 148
+num.names$ -- 38
+pop$ -- 850
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 2
+skip$ -- 2304
+stack$ -- 0
+substring$ -- 1410
+swap$ -- 1703
+text.length$ -- 58
+text.prefix$ -- 0
+top$ -- 5
+type$ -- 41
+warning$ -- 6
+while$ -- 148
+width$ -- 43
+write$ -- 404
+(There were 6 warnings)

@@ -1,0 +1,152 @@
+\chapter{Propuesta}\label{approach}
+\hrule \bigskip \vspace*{1cm}
+
+En esta parte de la tesis se va a detallar el protocolo de votación electrónica propuesto. En la Figura \ref{fig:pipeline} se muestra el proceso del protocolo de votación electrónica propuesto. 
+
+\begin{figure}
+    \centering
+    \includegraphics[scale = 0.4]{figures/pipeline.png}
+    \caption{Proceso del protocolo de votación electrónica propuesto}
+    \label{fig:pipeline}
+\end{figure}
+
+La primera parte es la preparación del proceso de votación. Aquí se generan las credenciales públicas y privadas para cada votante habilitado para votar. Se le hace entrega de la credencial privada al votante que le servirá posteriormente para realizar su voto. En la fase de votación el votante hace uso de su credencial privada y pública para realizar su voto. Con el algoritmo de cifrado de ElGamal se cifran las credenciales y el voto realizado. El voto cifrado es dividido en $n$ \textit{shares} mediante \textit{Visual Cryptography}. Cada \textit{share} es guardado dentro de un blockchain con las credenciales cifradas del votante. En el sistema hay un blockchain público donde se va a guardar un \textit{share}; que va a servir para que el votante verifique si su voto fue registrado, y $n-1$ blockchains privados con el resto de los \textit{shares}. Al finalizar el proceso de votación, se obtienen los \textit{shares} de cada votante y se regenera el voto con Visual Cryptography. Luego, se realiza el conteo de los votos utilizando prueba de conocimiento cero; para validar los votos, y un mezclado criptográfico para realizar un mejor conteo sin escrúpulos. El resultado final es la sumatoria de votos para cada
+candidato.
+
+
+\section{Preparación}
+
+%TODO verificar si los identificadores de los candidatos pueden ser publicos.
+
+Para comenzar con la preparación del proceso de votación, se crea un grupo cíclico multiplicativo $G_q \subset \mathbb{Z}^*_p$ de orden primo $q$, subgrupo del grupo de enteros de orden primo $p$. Se obtienen dos generadores $g_1, g_2 \in G_q$, y se obtienen valores aleatorios $h_1, h_2 \in G_q$. El siguiente paso es obtener la información concerniente a los votantes habilitados para votar desde la base de datos de la organización encargada del proceso de votación. El conjunto $V = \{V_1,...,V_m\}$ está conformado por los $m$ votantes habilitados. Para cada votante $V_i$ se obtiene la credencial privada $(\alpha,\beta,\gamma, \delta)_i \in G_q \times G_q \times G_q \times G_q$ de forma aleatoria, y se genera la credencial pública $u_i = h_1^\gamma h_2^\delta$. \\
+Las credenciales públicas son vinculadas a cada votante, obteniendo una tupla $(V_i, u_i)$. El conjunto de estas tuplas $PE = \{(V_1,u_1),...,(V_m,u_m)\}$ contiene las credenciales públicas vinculadas a cada votante habilitado para votar, en otras palabras el conjunto $PE$ actúa como el padrón electoral del proceso de votación, y es de dominio público. Los votantes pueden obtener su llave pública y verificar su participación en el proceso de votación revisando el conjunto $PE$. Las credenciales privadas son entregadas a cada votante por una canal seguro y borradas de cualquier lugar en donde hayan sido guardadas. \\
+Luego, se obtiene la información de los candidatos para formar un conjunto $C = \{C_1,...,C_{n+1}\}$ con los $n$ candidatos que participarán en las elecciones y un valor $C_{n+1}$ para los votos nulos. Para cada candidato $C_i$, se genera un valor aleatorio $c_i \in G_q$, que va a actuar como identificador del candidato $C_i$.  Los identificadores de los candidatos van a formar el conjunto $IC = \{c_1,...,c_{n+1}\}$. Por cuestiones de verificabilidad, se vincula el identificador de candidato con la información de su respectivo candidato para formar una tupla $(C_i, c_i)$. El conjunto de tuplas $PC = \{(C_1,c_1),...,(C_{n+1},c_{n+1})\}$ se hace de domino público. El conjunto $PC$ sirve para que el público en general pueda verificar los identificadores de candidatos que el sistema de votación electrónica va a usar, en pocas palabras, este conjunto es para fines de verificabilidad, no es usado en el sistema. Por último se obtienen dos generadores $e_1, e_2 \in G_q$ que van a actuar como generadores electorales y también son de dominio público junto al conjunto $PE$ y $PC$. \\
+Para el proceso de descomposición del voto mediante \textit{Visual Cryptography} se genera de manera aleatoria un conjunto de \textit{shares} $SO = \{so_{1},...,so_{n_o}\}$ donde $n_o$ es el número de los organizadores encargados, y se le hace entrega de un \textit{share} a cada organizador encargado. Estos \textit{shares} son utilizados para descomponer los votos para luego guardarlos en el blockchain. Su principal objetivo es de asegurar de que ningún organizador por si solo pueda reconstruir los votos. En el proceso de conteo, para poder reconstruir los votos, se necesita de la presencia de todos los organizadores con sus respectivos \textit{shares}.
+
+
+\section{Proceso de votación}
+
+Luego de obtener y validar todos los valores necesarios, se procede a iniciar el proceso de votación. Este proceso consta de dos partes: el cifrado del voto mediante ElGamal y la descomosición del voto cifrado mediante \textit{Visual Cryptography}.
+
+\subsection{Cifrado mediante ElGamal}
+
+Antes de entrar en detalle al proceso de votación, primero se va a definir dos instancias distintas del cifrado de ElGamal, una estándar y otra exponencial. Se obtiene un generador $l \in G_q$ que va a ser usado en las dos instancias. Igualmente, se obtiene de manera aleatoria el valor de la llave privada $x \in G_q$, y se calcula el valor de la llave pública $y = l^x$. El valor de estas dos llaves es usado en las dos instancias y en todo el proceso de votación, y la llave pública $y$ es de dominio público. La instancia de ElGamal estándar se va a escribir de la forma $E = enc_y^\times(m,r) = (l^r, my^r)$ donde $m \in G_q$ es el mensaje a cifrar, $r \in G_q$  es un valor aleatorio y $E$ es el mensaje cifrado representado por la tupla $(a,b) = (l^r, my^r)$. Para el descifrado se utiliza $m = dec_x^\times(E) = ba^{-x}$. \\
+La instancia de ElGamal exponencial se va a escribir de la forma $E = enc_y^+(m,r) = (l^r,l^my^r)$ donde $m \in G_q$ es el mensaje a cifrar, $r \in G_q$ es un valor aleatorio y $E$ es el mensaje cifrado representado por la tupla $(a,b) = (l^r,l^my^r)$. Para el descifrado se utiliza $m = dec^+_x(E) = log_l(ba^{-x})$. \\ %TODO todavía falta para qué va a ser usado la credencial electoral. Ver si se usa para la verificacion 
+El votante $V_i$ ingresa al sistema de votación con su credencial privada. Se genera una credencial electoral $\hat{u_i} = e^\alpha e^\beta$ para el votante $V_i$ y es enviada para verificar si es que ya hay un voto registrado, pendiente de validación o no hay ningún voto enlazado a esa credencial. Luego, realiza su voto $v_i \in IC$ de acuerdo al candidato de su preferencia. La credencial electoral $\hat{u_i}$ es cifrada con la instancia de ElGamal estándar y se obtiene $E_{u_i} =  enc^\times_y(\hat{u_i},r^u_i)$ con un valor aleatorio $r^u_i \in G_q$. El valor de $r^u_i$ es la credencial de verificación que va a ser entregada al votante una vez que el voto ha sido enviado, verificado y guardado en el blockchain. El voto $v_i$ se cifra con la instancia de ElGamal exponencial y se obtiene $E_{v_i} = enc^+_y(v_i,r^v_i)$ con un valor aleatorio $r^v_i \in G_q$. 
+
+\subsection{Descomposición mediante Visual Cryptography}
+
+Para el protocolo propuesto usa un modelo $(n,n)$ de \textit{Visual Cryptography}. El valor de $n$ denota el número de \textit{shares} que se van a generar a partir del mensaje, y va a ser necesario de los $n$ \textit{shares} para poder reconstruir el mensaje original. En el protocolo propuesto, $n = n_o + b_n$ donde $n_o$ es el número de \textit{shares} de los organizadores encargados, y $b_n$ es el número de cadenas de bloque que el sistema va a manejar (la estructura y funcionamiento del blockchain van a ser explicados en la siguiente sección). El modelo de \textit{Visual Cryptography} recibe como entrada el voto cifrado $E_{v_i}$ y el conjunto de \textit{shares} $SO$ y genera otro conjunto de \textit{shares} $S_i = \{s^{v_i}_1,...,s^{v_i}_{b_n}\}$ con $b_n$ elementos. Cada \textit{share} $s^{v_i}_j$ es vinculado con la credencial electoral del votante cifrada $E_{u_i}$ formando así una tupla $(E_{u_i}, s^{v_i}_j)$. El conjunto de estas tuplas $S_i' = \{(E_{u_i},s^{v_i}_1),...,(E_{u_i},s^{v_i}_{b_n})\}$ es transmitido por internet hacia el blockchain. \\
+Aquí se puede observar que los datos $S'$ transmitidos desde la computadora del votante hacia el blockchain se encuentran totalmente cifrados. Si el atacante logra interceptar una de las tuplas, no va a poder descifrar las credenciales sin la llave privada, y el \textit{share} contenido en esa tupla es inservible sin los otros \textit{shares}. Aun así, si el atacante logra interceptar todo los datos de $S'$ y reconstruye el voto cifrado $E_{v_i}$, no va a poder descifrarlo sin la llave privada. 
+
+\section{Blockchain}
+
+En esta sección se va a presentar el modelo de blockchain propuesto.
+
+\subsection{Arquitectura del blockchain propuesto}
+
+Como un blockchain simple, el blockchain propuesto es una cadena bloques, donde cada bloque es identificado por un hash y hacer referencia a un bloque anterior (Ver Sección \ref{sec:theoryBlock}). Además, el bloque contiene una lista $T$ conformada por tuplas $(E_{u_i}, s^{v_i}_j)$ que contienen la credencial electoral y un \textit{share} del voto de un votante $V_i$. El hash que identifica al bloque es generado a partir de la unión de la lista $T$ y el hash del bloque anterior. Se agrega un \textit{Timestamp} que contiene la marca de tiempo del momento en que se creó el bloque y, a diferencia de los bloques de un blockchain simple, no contiene el valor de \textit{Nonce} ya que se utiliza un algoritmo de consenso distinto al \textit{Proof of Work} de un blockchain convencional.
+
+\subsection{Topología de la red blockchain}
+
+%TODO ver si se podría generar shares basura(que no se distingan) a travez de una id nula(puros ceros), (osea que los shares no sean puros ceros porque la id es puros ceros), esto para mejorar la propiedad de libre de recibos.
+
+En la red hay un blockchain público $b_p$ y $b_n - 1$ blockchain privados que van a formar el conjunto de blockchains $B = \{b_p,b_{q_1},...,b_{q_{b_n - 1}}\}$ . Una tupla aleatoria del conjunto $S_i$ es guardada en $b_p$, y las restantes se guardan cada una en un blockchain privado $b_{q_i}$ distinto. El $b_p$ es de dominio público, y va a servir para que un votante pueda verificar si su voto ha sido registrado correctamente. Para lograr esta verificación, el votante vuelve a generar su credencial electoral $\hat{u_i} = e^\alpha e^\beta$ con su credencial privada. Luego, cifra su credencial con la instancia de ElGamal estándar y obtiene $E_{u_i} = enc^\times_y(\hat{u_i},r^u_i)$ donde el valor de $r^u_i$ es la credencial de verificación que se le dio al votante al momento de realizar el proceso de votación, y verifica si $E_{u_i}$ se encuentra en $b_p$. \\
+Nótece que el valor de la credencial de verificación $r^u_i$ puede ser considerado considerado como un recibo que se emite luego de que un votante realiza su voto. La definición de ``Libertad de recibos'' (Ver Sección \ref{sec:theoryLibreReci}) nos dice que el votante debe de ser incapaz de probar cómo y por quién voto a un coersor. Con la llave privada y con la credencial de verificación, el votante es capaz de probar que votó o no, pero es incapaz de probar por quién votó ni saber tampoco si es voto nulo o no, esto porque en el blockchain público, la credencial electoral cifrada del votante esta enlazada a un \textit{share} del voto cifrado del votante, el cual es insuficiente para revelar todo el voto, sin contar además de que este no va a poder ser descifrado sin la llave pública. \\
+Una de las razones de el por qué separar el voto cifrado de un votante en un número determinado de \textit{shares} es para mantener la privacidad eterna (Ver Sección \ref{sec:theoryPrivEter}). Para la privacidad eterna se presupone que se ha encontrado una forma de descifrar de forma eficiente cualquier mensaje cifrado con una instancia de ElGamal. Si el voto hubiera sido guardado en el blockchain sin ninguna subdivisión, entonces el votante podría fácilmente descifrarlo y probar al coersor por quién ha votado, pero con la división del voto cifrado en \textit{shares}, esto no sería posible, ya que necesitaría de los otros \textit{shares} de los blockchain privados y de los \textit{shares} de las organizaciones encargadas para poder rearmar el voto cifrado y recién poder descifrarlo. La seguridad de los blockchain privados recae en los servidores en donde éstos van a ser guardados y en cómo las organizaciones encargadas mantengan seguros sus \textit{shares}. \par
+La topología de la red esta basada en la red de \cite{li2017proof}. La topología de red del blockchain propuesto se muestra en la Figura \ref{fig:topologia}. En la topología existen tres tipos de nodos que se pueden atachar a la red: los nodos comisionados, los nodos de sufragio y los nodos votantes. 
+
+\begin{figure}
+    \centering
+    \includegraphics[scale = 0.5]{figures/topologia.png}
+    \caption{Topología de red del blockchain}
+    \label{fig:topologia}
+\end{figure}
+
+\subsubsection{Nodos comisionados}
+
+El conjunto de $nnc$ nodos comisionados $NC = \{nc_1,...,nc_{nnc}\}$ contiene los nodos más importantes de la red, ya que son los encargados de organizar el consenso para validar los votos y los bloques que los nodos de sufragio generen. También son los encargados de guardar la totalidad de los blockchains. Cada nodo $nc_i$ va a guardar un blockchain $b \in B$; esto se define por la función $block(nc_i) = b : NC \rightarrow B$. El número de nodos comisionados $nnc$ tiene que cumplir que $nnc \gg b_n$, por razones que se explicarán más adelante, por lo tanto, va a haber más de un nodo comisionado con el mismo blockchain llamados grupos de comisionados que forman el conjunto $GC = \{gc_1,...,gc_{b_n}\}$. Cada grupo de comisionados contiene nodos que tienen el mismo blockchain y pueden ser definidos de la siguiente manera:
+\begin{equation}\label{eq:grupos}
+    gc_j = \{\forall\:nc\:|\:nc \in NC,\:block(nc) = b_j\}
+\end{equation}
+
+donde $0 < j <= b_n$. Una de las razones de formar grupos es la redundancia, si es que un nodo comisionado falla o es eliminado de la red por comportamiento inusual, van a existir respaldos del blockchain en la red. Cada grupo de comisionados tiene una fuente de votaciones en donde son guardados los votos para su posterior verificación. Los nodos comisionados son administrados por la organización encargada del proceso de votación, y se tiene la suposición de que se alojan en servidores privados y altamente seguros. Cada nodo comisionado esta virtualmente conectado con todos los nodos comisionados.
+
+\subsubsection{Nodos de sufragio}
+
+El conjunto de $nns$ nodos de sufragio $NS = \{ns_1,...,ns_{nns}\}$ contiene los nodos intermediarios entre los nodos votantes y los nodos comisionados. Estos nodos son los encargados de validar los votos y generar bloques con las tuplas $(E_{u_i}, s^{v_i}_j)$ de los nodos votantes bajo la supervisión de los nodos comisionados. Al igual que los nodos comisionados, los nodos de sufragio forman un conjunto de grupos $GS = \{gs_1,...,gs_{b_n}\}$ donde cada grupo de sufragio es obtenido de la misma forma con la Ecuación \ref{eq:grupos}. La diferencia está en que los nodos de sufragio sólo guardan el último bloque de la cadena; esto por cuestiones de seguridad, y porque para poder generar nuevos bloques sólo se necesita del último bloque de la cadena. \\
+Un grupo de sufragio $gs_i$ es supervisado por un grupo de comisionados $gc_j$ si cumplen que $block(gs_i) = block(gc_j)$, donde $block()$ retorna el blockchain que guarda cada grupo. Cada nodo de sufragio esta virtualmente conectado con todos los nodos de su grupo y con todos los nodos comisionados del grupo supervisor. Los nodos comisionados guardan un valor de confiabilidad $cp_k$ entre $0$ y $1$ para cada nodo de sufragio $ns_k \in NS$. Este valor es utilizado en el algoritmo de verificación y consenso para descartar posibles nodos maliciosos.
+
+\subsubsection{Nodos votantes}
+
+El conjunto de $nnv$ nodos de sufragio $NV = \{nv_1,...,nv_{nnv}\}$ contiene los nodos más simples de la red. Los nodos votantes son, como su nombre lo indica, los nodos en donde los votantes pueden realizar sus votos. La única funcionalidad de estos nodos es de recolectar y enviar los votos a los nodos de sufragio. Los nodos votantes son los más volátiles del sistema, dependiendo del enfoque. Cuando un nuevo nodo votante se atacha a la red, es conectado a un sólo nodo de sufragio, generalmente el de menor distancia, al cual va enviar los votos realizados en el nodo. \par
+
+
+Dependiendo del tipo de sistema electrónica que se quiera implementar, un mismo nodo puede ser de dos tipos diferentes. Por ejemplo, en un sistema no remoto, las máquinas de sufragio tendrían el rol de nodos votantes y de nodos de sufragio. En un sistema híbrido, igualmente las máquinas de sufragio tendría el rol de nodos votantes y nodos de sufragio y habría nodos enteramente votantes que serían las computadoras personales de los votantes. En un sistema remoto, igualmente habría nodos enteramente votantes y los nodos de sufragio también serían nodos comisionados.
+
+\subsection{Algoritmo de validación y consenso}
+
+%TODO falta ver como validar la credencial (donde van a estar los conjuntos y como se van a manejar)
+El proceso de validación y consenso se da por ciclos de votación y son organizados y supervisados por cada grupo de comisionados. Los nodos votantes envían el conjunto de tuplas $S'_i$ con la credencial electoral y los \textit{shares} del voto cifrado al nodo de sufragio al que esté conectado. El nodo de sufragio envía el conjunto hacia un nodo comisionado. El nodo comisionado que recibe el conjunto guarda de forma aleatoria cada tupla en una fuente de votos de un grupo de comisionados. El primer ciclo de votación de un grupo de comisionados se da cuando la fuente sobrepasa un umbral determinado, y luego se comienza un ciclo inmediatamente después de terminar el anterior. Un ciclo de votación se divide en tres partes: preparación del ciclo, la verificación de votos y la verificación de bloques.
+
+\subsubsection{Preparación del ciclo}
+
+En el primer ciclo se establecen en $1$ los valores de confiabilidad de todos los nodos de sufragio del grupo, y se elige de manera aleatoria un líder comisionado en cada grupo. \\
+Teniendo en cuenta que el ciclo es del grupo de comisionados $\hat{gc}$, en los demás ciclos se sigue los siguientes pasos:
+\begin{enumerate}
+    \item El líder comisionado selecciona de manera aleatoria un grupo $gc' \neq \hat{gc}$.
+    \item El líder comisionado del grupo $gc'$ selecciona de manera aleatoria un nodo del grupo $\hat{gc}$.
+    \item El nodo seleccionado se vuelve el nuevo líder comisionado del grupo $\hat{gc}$.
+\end{enumerate}
+Para todos los ciclos, incluido el primer ciclo, el líder comisionado del grupo $\hat{gc}$ selecciona $(|gs| / 2)$ nodos de sufragio del grupo $gs$ al que supervisa. Estos nodos son escogidos aleatoriamente en base a una probabilidad. La probabilidad de escoger el nodo $i$ se calcula con la siguiente fórmula:
+$$p_i = \frac{cp_i}{Z} \:donde\: Z = \sum_{i=1}^{|gs|}cp_i$$
+donde $cp_i$ es el valor de confiabilidad de el nodo de sufragio $i$. Los nodos escogidos son los encargados de realizar la verificación de votos y la verificación de bloques.
+
+\subsubsection{Verificación de votos}
+
+Teniendo el líder comisionado del grupo y el conjunto de nodos de sufragio candidatos escogido, se siguen los siguientes pasos:
+\begin{enumerate}
+    \item El líder comisionado obtiene los votos de la fuente de votos y los transmite a cada uno de los nodos candidatos.
+    \item Para cada voto obtenido de la fuente $vf_i$ se hace:
+    \begin{enumerate}
+        \item Cada nodo candidato verifica la validez del voto $vf_i$ y manda su veredicto al líder comisionado. Los veredictos son ``Aceptado'' o ``Rechazado''.
+        \item El líder comisionado da un lapso de tiempo para recibir los veredictos.
+        \item Al finalizar el lapso, por mayoría se decide si se rechaza o se acepta el voto. Si el voto es rechazado, se elimina de todos los nodos, y si es aceptado, es guardado por todos los nodos.
+        \item Se actualiza el valor de confiabilidad de los nodos candidato cuyos veredictos hayan diferido de la mayoría con la fórmula: $cp' = cp * \varphi$, donde $\varphi$ es un valor de tolerancia entre $0$ y $1$.
+    \end{enumerate}
+\end{enumerate}
+
+Al final se tiene un conjunto de votos válidos.
+
+\subsubsection{Verificación de bloques}
+
+Teniendo el líder comisionado del grupo, el conjunto de nodos de sufragio candidatos y el conjunto de votos válidos, se siguen los siguientes pasos:
+\begin{enumerate}
+    \item Cada nodo candidato genera un bloque con el conjunto de votos válidos y lo envía al líder comisionado.
+    \item El líder comisionado da un lapso de tiempo para recibir los bloques.
+    \item Se escoge el bloque con más repeticiones.
+    \item Se actualiza el valor de confiabilidad de los nodos candidatos cuyos bloques difieran del bloque escogido con la misma fórmula usada en la verificación de votos.
+    \item El bloque escogido se agrega a la cadena y se actualiza en todos los nodos comisionados del grupo y en todos los nodos de sufragio del grupo supervisado. 
+    \item Se termina el ciclo y se da inicio a uno nuevo.
+\end{enumerate}
+
+
+
+
+
+
+\section{Proceso de conteo}
+
+Cuando las elecciones terminan, el proceso de votación se cierra y se apagan todos los nodos de sufragio, por consiguiente ningún nodo de votación va a poder conectarse a la red para emitir algún voto. El proceso de conteo se hace en presencia de las autoridades y de las organizaciones encargadas, que hacen entrega de sus \textit{shares} para formar el conjunto $SO$. El proceso está dividido en dos partes: la regeneración de votos y el conteo de votos.
+
+\subsection{Regeneración de los votos}
+
+Para cada credencial electoral $E_{u_i}$ se recolectan las tuplas de todos los blockchain cuya credencial en la tupla coincida con $E_{u_i}$. Como resultado se obtiene el conjunto de \textit{shares} $S_i$. Se reconstruye el voto cifrado $E_{v_i}$ con los conjuntos $S_i$ y $SO$  mediante el modelo de Visual Criptography. El conjunto de votos cifrados es definido por $F = \{E_{v_1},...,E_{v_{m'}}\}$ donde $m'$ puede ser un número igual o diferente al número de votantes $m$.
+%Si se cumple que $m' > m$, entonces se puede decir que hay votos realizados de forma maliciosa.
+
+\subsection{Conteo de votos}
+
+Para el conteo de votos se utiliza la reencriptación con la instancia exponencial del algoritmo ElGamal. La reencriptación es posible ya que ElGamal exponencial es homomórfico. Dado un mensaje cifrado $E = enc^+_y(m,r)$, se obtiene un nuevo valor aleatorio $r' \in G_q$ y se calcula el mensaje cifrado $E' = reEnc^+_y(E,r') = E \cdot enc^+_y(0,r') = enc^+_y(m, r + r')$. Para hacer un conteo de votos más confiable y con menos escrúpulos, se aplica el mezclado criptográfico dada por $Z' = shuffle^\phi_{f_K}(Z)$ (Ver Sección \ref{sec:theoryMezCri}). En donde, para este proceso, se va a tener la función $f_{k_i}(z_i) = reEnc(z_i,k_i)$. \\
+Se obtiene una lista de llaves $K \subset G_q$ de tamaño $m'$ y una permutación aleatoria $\phi$. Se aplica un mezclado criptográfico a $F$ y se obtiene $F' = shuflee^\phi_{f_K}(F)$. Luego, se descifra el conjunto de votos cifrados obteniendo $H = dec^+_x(F')$, con la llave privada $x$ calculada al inicio del protocolo. Se descartan todos los votos que no se encuentran en el conjunto de identificadores $IC$ y se obtiene el conjunto de votos válidos $H' = H \cap IC$. Finalmente se cuentan las ocurrencias de cada identificador de candidato en $H'$ obteniendo así los resultados finales del proceso de votación.
+
+

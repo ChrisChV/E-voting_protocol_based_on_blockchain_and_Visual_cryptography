@@ -1,0 +1,62 @@
+\documentclass[11pt,openright,final]{unsa}
+\usepackage{amsthm}
+
+\title{Protocolo de votación electrónica basado en Blockchain y Visual Cryptography}
+\author{Christofer Fabián Chávez Carazas}%
+\examinerone{Prof. Dr. Nombre Apellido}{Presidente}%
+\examinertwo{Prof. Dr. Nombre Apellido}{Secretario}%
+\examinerthree{Prof. Dr. Nombre Apellido}{Integrante}%
+\examinerfour{Prof. Dr. Nombre Apellido}{Externo}{Universidad del ABC} % of being the case
+\date{19 de Junio del 2018}
+\dedicate{A Dios, por todo lo que me ha dado, a todos los profesores
+por sus enseñanzas y algunos amigos.}
+
+\begin{document}%%%%%%%%-------------------------------------------------------
+\makeFirstCover \makeSecondCover %
+\begin{frontmatter}
+\approved{\cuatro}%  {\tres} or {\cuatro}
+\dedicatory
+\begin{singlespace}
+\tableofcontents \listoffigures \listoftables \pagebreak
+\end{singlespace}
+\myAcknowledgements{Agradecimientos}%
+\begin{abstract}
+\hrule \bigskip \vspace*{1cm}
+El voto electrónico (\textit{e-voting}) es un tema latente en nuestra actual sociedad; la tecnología avanza más rápido de lo que lo hace nuestro sistema democrático. Los protocolos y sistemas de voto electrónico deben adecuarse a las necesidades de la democracia, siendo las más relevantes la transparencia, la verificabilidad, la seguridad y la simplicidad.
+Al mismo tiempo, la tecnología \textit{blockchain} está cambiando nuestra forma de ver la seguridad de los datos, gracias a características como la descentralización, la inmutabilidad, el anonimato y la auditabilidad.
+Además, existen infinidad de métodos y modelos criptográficos que ayudan a que la transferencia de datos sea más segura. \textit{Visual Cryptography} es una alternativa efectiva para cifrar datos como imágenes y texto, y puede ser usada para dar una capa de seguridad más al sistema. \\
+Utilizando estas tecnologías se puede cumplir con algunos requerimientos que el \textit{e-voting} necesita, además de arreglar problemas, como el de las plataformas de votación maliciosas, presentes en otros protocolos. 
+La propuesta de esta investigación es crear un nuevo protocolo de \textit{e-voting} con la ayuda de un modelo de \textit{blockchain} para la seguridad de los datos y el consenso, \textit{Visual Cryptography} para mejorar la privacidad de los datos, y un protocolo criptográfico para el proceso de votación.
+\end{abstract}
+\myAbstrac{Abstract}%
+\end{frontmatter}%
+\pagestyle{fancyplain}
+\include{Cap1}
+\include{Cap2}
+\include{Cap3}
+\include{Cap4}
+\include{Cap5}
+
+\chapter{Conclusiones y trabajo futuro}
+\hrule \bigskip \vspace*{1cm}
+%------------------------------------------------------------------------
+
+\section{Conclusiones}
+
+La votación electrónica puede ser una mejor alternativa a la velocidad y a la comodidad de los usuarios, pero cumplir con todos los requerimientos que la constitucionales y de seguridad que la democracia especifica es una tarea ardua. En la presente investigación se desarrolló un protocolo de votación electrónica basado en blockchain que da una solución al problema de las máquinas de votación maliciosas sin eliminarlas totalmente de la red. Además, el protocolo puede ser adaptado a los diferentes tipos de votación electrónica que existe, manteniendo siempre la transparencia y la seguridad de los datos. El protocolo cumple con la privacidad eterna durante y después del proceso de votación, en ningún momento un atacante puede ligar las credenciales del votante con un voto específico. El protocolo también cumple con la libertad de recibos, ningún coersor es capaz de obtener el voto de un votante mediante un dato emitido por el sistema. El modelo de blockchain con el algoritmo de consenso propuestos pueden soportar $3N/4 + 1$ nodos maliciosos, donde $N$ es el número de nodos; mientras que el modelo convencional de blockchain soporta $N/2$ nodos maliciosos.
+
+
+\section{Contribuciones}
+
+El protocolo propuesto da una solución al problema de las máquinas de votación maliciosas, manteniendo los requerimientos constitucionales y de seguridad que la democracia dicata, tales como la privacidad eterna y la libertad de recibos. Además, el protocolo puede ser adaptado a los diferentes tipos de votación electrónica que existe. El protocolo no cumple, en su totalidad, con la resistencia a la coersión.
+
+\section{Trabajos futuros}
+
+Como trabajos futuros se piensa realizar las implementaciones de todos los tipos de votación electrónica con el protocolo propuesto, y realizar simulaciones a diferentes escalas para evaluar la eficiencia del protocolo y, además, realizar un análisis de seguridad atacando directamente el sistema. 
+
+%\myappendix{Apendice}
+\begin{singlespace}
+\bibliographystyle{IEEEtran}%plain
+\bibliography{biblio}
+\end{singlespace}
+\end{document}%%%%%%%%--------------------------------------------------------

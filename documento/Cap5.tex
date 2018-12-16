@@ -1,0 +1,94 @@
+\chapter{Experimentos y Resultados}\label{result}
+\hrule \bigskip \vspace*{1cm}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lema}
+
+\section{Análisis de Seguridad}
+
+\subsection{Privacidad eterna}
+
+\begin{lemma}\label{lemma:et1}
+Se mantiene la privacidad eterna luego del proceso de votación ante un futuro adversario que resuelve de manera eficiente el problema del logaritmo discreto.
+\end{lemma}
+\begin{proof}[\textbf{Prueba:}]
+
+Se tiene la suposición que el proceso de votación ha terminado y que en un futuro no muy lejano se descubre una manera eficiente de resolver el problema del logaritmo discreto. Un adversario podría descifrar sin ningún problema la credencial electoral $E_{u_i}$ del votante $V_i$ enlazada al \textit{share} $s^{v_i}_j$ para algún $j$ donde $0 < j \le b_n$ que se encuentra guardado en el blockchain público $b_p$. Recordando, estas credenciales tienen la forma $\hat{u_i} = e^\alpha e^\beta$, donde $\alpha$ y $\beta$ son parte de la llave privada del votante $i$. El adversario también podría descifrar la llave pública del votante $V_i$, $u_i = h_1^\gamma h_2^\delta$, obteniendo así los valores $\gamma$ y $\delta$. Con estos valores no hay forma de vincular el \textit{share} $s^{v_i}_j$ con el votante $V_i$ ya que se requeriría de la llave privada $(\alpha, \beta, \gamma, \delta)$ para poder hacer la vinculación, pero esta llave sólo se encuentra en posesión de el votante $V_i$ (y tal vez para ese momento esté perdida); no se encuentra guardada en ningún otro lugar.
+\end{proof}
+
+\begin{lemma}
+Se mantiene la privacidad eterna durante el proceso de votación ante un futuro adversario que resuelve de manera eficiente el problema del logaritmo discreto
+\end{lemma}
+
+\begin{proof}[\textbf{Prueba:}]
+Aquí se cumple también la prueba del Lema \ref{lemma:et1}. Pero en este caso puede ocurrir que un adversario intercepte el conjunto de tuplas $S'_i$ y la llave pública $u_i$, pertenecientes al votante $V_i$, mientras son enviadas desde un nodo de votación hacia un nodo de sufragio. El adversario puede enlazar el conjunto $S'_i$ con el votante $V_i$, pero no podría revelar el voto porque le haría falta el conjunto de \textit{shares} $SO$ de los organizadores encargados. En este caso la privacidad depende de cuan seguro se mantenga el conjunto $SO$.
+\end{proof}
+
+\subsection{Libre de recibo}
+
+\begin{lemma}
+Un votante no puede probar por quién votó a un coersor simple.
+\end{lemma}
+
+\begin{proof}[\textbf{Prueba:}]
+Recordando, luego de que un votante $V_i$ emite su voto, se le hace entrega de una credencial de verificación $r^u_i$. Lo único que el votante puede hacer con esa credencial es verificar que uno de los \textit{shares} generados a partir de su voto esté en el blockchain público $b_p$, que significa que su voto ha sido registrado correctamente y está en la red blockchain. Por lo tanto, un coersor no puede obtener información del voto del votante a partir de la credencial de verificación brindada.
+\end{proof}
+
+\begin{lemma}
+Un votante no puede probar por quién votó a un coersor que sea un organizador encargado o esté presente en el proceso de conteo.
+\end{lemma}
+
+\begin{proof}[\textbf{Prueba:}]
+Si un coersor tiene la credencial electoral $\hat{u_i}$ y la credencial de verificación $r^u_i$ del votante $V_i$ puede obtener la credencial electoral cifrada $E_{u_i}$. Pero no puede enlazarlo al voto, porque al momento de la regeneración de los votos, las credenciales electorales son desligadas y descartadas. Además, no podría enlazar la posición en la que aparece la credencial $E_{u_i}$ con la posición en la que aparece el voto cifrado $E_{v_i}$ en el conjunto $F$ ya que este conjunto es mezclado criptográficamente.
+\end{proof}
+
+\subsection{Confiabilidad}
+
+En esta parte se va a probar la confiabilidad del algoritmo de consenso. \\
+La probabilidad de escoger un líder comisionado $L_i$ de un grupo comisionado $gc_i$ al inicio del protocolo es:
+\begin{equation}
+    P_0(L_i) = \frac{1}{|gc_i|}  
+\end{equation}
+, donde $|gc_i|$ es el número de nodos comisionado en el grupo $gc_i$. \\
+La probabilidad de escoger un grupo $gc_i$ se da por el evento $G_i$ y se obtiene como sigue:
+\begin{equation}
+    P(G_i) = \frac{1}{|GC| - 1}
+\end{equation}
+, donde $|GC|$ es el número de grupos comisionado. \\
+La probabilidad de que un líder comisionado $L_j$ de un grupo comisionado $gc_j$ escoja un grupo comisionado $gc_i$ es un ciclo $t$ esta dada por el evento $L_jG_i$ y se obtiene como sigue:
+\begin{equation}
+  P_t(L_jG_i) = P_{t-1}(L_j) * P(G_i)  
+\end{equation}
+La probabilidad de que un líder comisionado $L_i$ de un grupo comisionado $gc_i$ escoja a un nuevo líder comisionado $L_j^{'}$ de un grupo comisionado $gc_j$ en un ciclo $t$ esta dada por el evento $L_iL_j^{'}$ y se obtiene como sigue:
+\begin{equation}
+  P_t(L_iL_j^{'}) = P_t(L_jG_i) * P_0(L_j^{'})  
+\end{equation}
+donde $L_j$ es el líder actual del grupo $gc_j$ y $L_j^{'}$ es el nuevo lider escogido del grupo $gc_j$. La probabilidad de escoger un nuevo líder comisionado $L_j$ de un grupo comisionado $gc_i$ en un ciclo $t$ es:
+\begin{equation}\label{eq:seg_1}
+  P_t(L_j) = \frac{\sum_{i = 0, i \neq j}^{|GC|}P_t(L_iL_j)}{|GC| - 1}  
+\end{equation}
+La probabilidad un nodo de sufragio $ns_i$ de un grupo de sufragio $gs_i$ es:
+\begin{equation}
+  P(ns_i) = \frac{cp_i}{|gs_i|}  
+\end{equation}
+La probabilidad de que un líder $L_i$ escoja a un nodo de sufragio $ns_i$ esta dada por el evento $L_ins_i$ y se obtiene de la siguiente forma:
+\begin{equation}\label{eq:seg_2}
+  P_t(L_ins_i) = P_{t-1}(L_i) * P(ns_i)  
+\end{equation}
+La ecuación \ref{eq:seg_1} sirve para poder hallar también la probabilidad de que se escoja un líder de grupo maliciosos, si es que el sistema de grupos comisionado ha sido comprometido, lo cuál es más complicado ya que esta capa de nodos se encuentra fuera del rango de conexiones públicas. La ecuación \ref{eq:seg_2} sirve para hallar la probabilidad de que un líder escoja un nodo de sufragio que se encuentra comprometido; esta situación si puede ocurrir con mayor frecuencia, ya que los nodos de sufragio, dependiendo de la implementación, pueden estar ubicados públicamente. \\
+SecIVo \cite{neumann2016secivo} es un framework para medir de forma cuantitativa la seguridad en sistemas y protocolos de votación electrónica. SecIvo recibe modelos cualitativos de la seguridad del sistema, como las posibles amenazas a las que se enfrenta el sistema y las fórmulas de probabilidad de que ocurran dichas amenazas.
+
+\begin{lemma}
+El sistema puede soportar hasta $\frac{3|gs_i|}{4} + 1$ nodos de sufragio maliciosos hasta que el grupo $gs_i$ sea comprometido por completo.
+\end{lemma}
+
+\begin{proof}[\textbf{Prueba:}]
+El líder $L_i$ del grupo de sufragio $gs_i$ escoge $|gs_i| / 2$ nodos de sufragio para que participen en la verificación de los votos. Si el atacante tiene el control de $|gs_i| / 2$ nodos de sufragio, no le es suficiente, sólo se necesitan $|gs_i| / 4 + 1$ nodos en buen estado para que dominen un ciclo y reduzcan el valor de confiabilidad de todos los demás nodos maliciosos. Entonces, para que el atacante pueda tener control de los ciclos debe infectar al menos $|gs_i| / 2 + |gs_i| / 4 + 1 = \frac{3|gs_i|}{4} + 1$ nodos de sufragio, y así poder controlar a todo el grupo.
+\end{proof}
+
+\section{Implementación del protocolo}
+
+El protocolo se implementó simulando un sistema de votación electrónica de tipo remoto. En este caso, los servidores funcionan como nodos comisionado y nodos de sufragio, mientras que las computadoras personales de los votantes funcionan como nodos votantes. La red blockchain fue implementada en el lenguaje Python, mientras que la fase de preparación, votación y conteo de votos fueron implementados en el lenguaje C++. \\
+Una cadena de bloques tiene un archivo de configuración con el bloque que inicia la cadena, el bloque que termina la cadena, el número de bloques que tiene la cadena y el número de votos totales verificados en la cadena. Cada bloque contiene su hash, la lista de las tuplas con las credenciales y los votos, el hash del bloque padre, y el \textit{timestamp}. La implementación del protocolo sirvió para demostrar su correcto funcionamiento.
+
